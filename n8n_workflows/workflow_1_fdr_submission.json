@@ -1,0 +1,120 @@
+{
+  "name": "FDR Submission & Verification Routing",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "fdr-submitted",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook: FDR Submitted",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8000/api/webhooks/n8n/callback",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-AetherVault-Token",
+              "value": "n8n-secure-token-2026"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "ocr.process_document"
+            },
+            {
+              "name": "fdr_id",
+              "value": "={{ $json.body.fdr_id }}"
+            },
+            {
+              "name": "status",
+              "value": "OCR_PROCESSING_INITIATED"
+            }
+          ]
+        }
+      },
+      "id": "2",
+      "name": "Trigger OCR Extraction & Image Quality Check",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8000/api/webhooks/n8n/callback",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-AetherVault-Token",
+              "value": "n8n-secure-token-2026"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "workflow.route_scrutiny"
+            },
+            {
+              "name": "fdr_id",
+              "value": "={{ $json.body.fdr_id }}"
+            },
+            {
+              "name": "target_role",
+              "value": "AICTE_SCRUTINY_OFFICER"
+            }
+          ]
+        }
+      },
+      "id": "3",
+      "name": "Route to Scrutiny Maker Queue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [680, 300]
+    }
+  ],
+  "connections": {
+    "Webhook: FDR Submitted": {
+      "main": [
+        [
+          {
+            "node": "Trigger OCR Extraction & Image Quality Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger OCR Extraction & Image Quality Check": {
+      "main": [
+        [
+          {
+            "node": "Route to Scrutiny Maker Queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "id": "workflow_1_fdr_submission",
+  "active": true
+}

@@ -1,0 +1,8 @@
+fdr_number,aicte_permanent_id,issuing_bank_name,branch_name,ifsc_code,account_number,principal_amount,maturity_amount,interest_rate,issue_date,maturity_date,term_months,joint_account_title
+FDR-DEMO-GOOD-01,1-9087654321,Bharat National Bank,Vasant Kunj,BNBK0009988,110022339901,1500000,3100000,7.25,2024-02-01,2034-02-01,120,Jointly RO AICTE & Principal
+,1-9087654321,Bharat National Bank,Vasant Kunj,BNBK0009988,110022339901,1500000,3100000,7.25,2024-02-01,2034-02-01,120,Row with Missing FDR Number
+FDR-DEMO-NO-ID,,Punjab National Bank,Delhi,PUNB0123400,089200210001,3500000,7200000,7.00,2024-01-10,2034-01-10,120,Row with Missing Institution ID
+FDR-DEMO-FAKE-INST,9-UNKNOWN-INST,State Bank of India,Mumbai,SBIN0001234,30992817001,2500000,5100000,7.10,2024-03-01,2034-03-01,120,Non-existent AICTE ID
+FDR-DEMO-NEG-AMT,1-3349019283,State Bank of India,Pune Main,SBIN0001421,30992817001,-50000,0,7.10,2024-03-01,2034-03-01,120,Negative Principal Amount
+FDR-DEMO-BAD-DATE,1-4521873910,Punjab National Bank,Bengaluru,PUNB0123400,089200210001,1000000,2000000,7.00,2026-05-01,2024-01-01,120,Maturity Before Issue Date
+FDR-DEMO-GOOD-01,1-9087654321,Bharat National Bank,Vasant Kunj,BNBK0009988,110022339901,1500000,3100000,7.25,2024-02-01,2034-02-01,120,Duplicate within file

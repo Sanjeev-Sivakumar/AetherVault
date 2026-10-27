@@ -1,0 +1,114 @@
+{
+  "name": "Multi-Channel Notification Router (SMTP, WhatsApp, Voice/SMS)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "dispatch-multi-channel",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook: Alert Triggered",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8000/api/webhooks/n8n/callback",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-AetherVault-Token",
+              "value": "n8n-secure-token-2026"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "notification.multi_channel_route"
+            },
+            {
+              "name": "channel_smtp",
+              "value": "true"
+            },
+            {
+              "name": "channel_whatsapp",
+              "value": "true"
+            },
+            {
+              "name": "channel_ivr",
+              "value": "true"
+            }
+          ]
+        }
+      },
+      "id": "2",
+      "name": "Dispatch SMTP Email via Gmail Service",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [440, 200]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8000/api/webhooks/n8n/callback",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-AetherVault-Token",
+              "value": "n8n-secure-token-2026"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "notification.whatsapp_fallback"
+            },
+            {
+              "name": "status",
+              "value": "FALLBACK_SIMULATED_LOGGED"
+            }
+          ]
+        }
+      },
+      "id": "3",
+      "name": "Route WhatsApp Cloud API / Voice Call Fallback",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [680, 400]
+    }
+  ],
+  "connections": {
+    "Webhook: Alert Triggered": {
+      "main": [
+        [
+          {
+            "node": "Dispatch SMTP Email via Gmail Service",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Route WhatsApp Cloud API / Voice Call Fallback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "id": "workflow_6_multi_channel_notifications",
+  "active": true
+}

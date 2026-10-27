@@ -1,0 +1,126 @@
+{
+  "name": "OCR Discrepancy & Exception Queue Routing",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ocr-discrepancy-detected",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook: Discrepancy Detected",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [220, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8000/api/webhooks/n8n/callback",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-AetherVault-Token",
+              "value": "n8n-secure-token-2026"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "exception.queue_pushed"
+            },
+            {
+              "name": "fdr_id",
+              "value": "={{ $json.body.fdr_id }}"
+            },
+            {
+              "name": "discrepancies",
+              "value": "={{ $json.body.discrepancies }}"
+            },
+            {
+              "name": "status",
+              "value": "DISCREPANCY_FLAGGED"
+            }
+          ]
+        }
+      },
+      "id": "2",
+      "name": "Push to Exception Queue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8000/api/webhooks/n8n/callback",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-AetherVault-Token",
+              "value": "n8n-secure-token-2026"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "notification.broadcast"
+            },
+            {
+              "name": "target_role",
+              "value": "AICTE_SCRUTINY_OFFICER"
+            },
+            {
+              "name": "title",
+              "value": "CRITICAL: Scrutiny Discrepancy Flagged"
+            },
+            {
+              "name": "message",
+              "value": "Instrument parameter mismatch identified during AICTE vision analysis."
+            }
+          ]
+        }
+      },
+      "id": "3",
+      "name": "Dispatch Priority Officer Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [700, 300]
+    }
+  ],
+  "connections": {
+    "Webhook: Discrepancy Detected": {
+      "main": [
+        [
+          {
+            "node": "Push to Exception Queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Push to Exception Queue": {
+      "main": [
+        [
+          {
+            "node": "Dispatch Priority Officer Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

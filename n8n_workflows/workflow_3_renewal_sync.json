@@ -1,0 +1,120 @@
+{
+  "name": "Renewal & Replacement Status Synchronization",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "renewal-submitted",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook: Renewal Submitted",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8000/api/webhooks/n8n/callback",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-AetherVault-Token",
+              "value": "n8n-secure-token-2026"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "renewal.archive_parent_snapshot"
+            },
+            {
+              "name": "parent_fdr_id",
+              "value": "={{ $json.body.parent_fdr_id }}"
+            },
+            {
+              "name": "new_fdr_number",
+              "value": "={{ $json.body.new_fdr_number }}"
+            }
+          ]
+        }
+      },
+      "id": "2",
+      "name": "Archive Parent Snapshot & Create Version Lineage",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8000/api/webhooks/n8n/callback",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-AetherVault-Token",
+              "value": "n8n-secure-token-2026"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "renewal.sync_child_status"
+            },
+            {
+              "name": "parent_fdr_id",
+              "value": "={{ $json.body.parent_fdr_id }}"
+            },
+            {
+              "name": "status",
+              "value": "REPLACED_ROLLED_OVER"
+            }
+          ]
+        }
+      },
+      "id": "3",
+      "name": "Synchronize Active Status to Registry",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [680, 300]
+    }
+  ],
+  "connections": {
+    "Webhook: Renewal Submitted": {
+      "main": [
+        [
+          {
+            "node": "Archive Parent Snapshot & Create Version Lineage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Archive Parent Snapshot & Create Version Lineage": {
+      "main": [
+        [
+          {
+            "node": "Synchronize Active Status to Registry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "id": "workflow_3_renewal_sync",
+  "active": true
+}

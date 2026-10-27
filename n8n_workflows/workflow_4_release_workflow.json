@@ -1,0 +1,120 @@
+{
+  "name": "Release Claim & Discharge Voucher Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "release-requested",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook: Release Requested",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8000/api/webhooks/n8n/callback",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-AetherVault-Token",
+              "value": "n8n-secure-token-2026"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "release.route_checker"
+            },
+            {
+              "name": "release_id",
+              "value": "={{ $json.body.release_id }}"
+            },
+            {
+              "name": "target_role",
+              "value": "AICTE_SCRUTINY_OFFICER"
+            }
+          ]
+        }
+      },
+      "id": "2",
+      "name": "Route Release to Scrutiny Checker",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8000/api/webhooks/n8n/callback",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-AetherVault-Token",
+              "value": "n8n-secure-token-2026"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "release.discharge_voucher_generated"
+            },
+            {
+              "name": "release_id",
+              "value": "={{ $json.body.release_id }}"
+            },
+            {
+              "name": "status",
+              "value": "RELEASE_APPROVED"
+            }
+          ]
+        }
+      },
+      "id": "3",
+      "name": "Generate Discharge Voucher & Notify Approver",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [680, 300]
+    }
+  ],
+  "connections": {
+    "Webhook: Release Requested": {
+      "main": [
+        [
+          {
+            "node": "Route Release to Scrutiny Checker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Release to Scrutiny Checker": {
+      "main": [
+        [
+          {
+            "node": "Generate Discharge Voucher & Notify Approver",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "id": "workflow_4_release_workflow",
+  "active": true
+}

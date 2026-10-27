@@ -1,0 +1,6 @@
+fdr_number,aicte_permanent_id,issuing_bank_name,branch_name,ifsc_code,account_number,principal_amount,maturity_amount,interest_rate,issue_date,maturity_date,term_months,joint_account_title
+FDR-TEST-BNB-101,1-9087654321,Bharat National Bank,Vasant Kunj,BNBK0009988,110022339901,1500000,3100000,7.25,2024-02-01,2034-02-01,120,Jointly RO AICTE & Principal
+FDR-TEST-SBI-102,1-3349019283,State Bank of India,Pune Main,SBIN0001421,30992817001,2500000,5100000,7.10,2024-03-01,2034-03-01,120,RO Western Region & Principal
+FDR-TEST-PNB-103,1-4521873910,Punjab National Bank,Bengaluru,PUNB0123400,089200210001,3500000,7200000,7.00,2024-01-10,2034-01-10,120,RO SW AICTE & Principal
+FDR-TEST-CB-104,1-7782390145,Canara Bank,Chennai Guindy,CNRB0001234,449018273612,1800000,3700000,7.15,2024-04-15,2034-04-15,120,RO Southern AICTE & Principal
+FDR-TEST-BOB-105,1-6284901237,Bank of Baroda,Ahmedabad,BARB0AHMEDA,998877665544,2000000,4150000,7.20,2024-05-20,2034-05-20,120,RO Central AICTE & Principal

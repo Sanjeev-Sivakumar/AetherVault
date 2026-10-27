@@ -1,0 +1,117 @@
+{
+  "name": "Scheduled Maturity Scans & Advance Reminders",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24
+            }
+          ]
+        }
+      },
+      "id": "1",
+      "name": "Schedule: Daily 06:00 AM Scan",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8000/api/webhooks/n8n/callback",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-AetherVault-Token",
+              "value": "n8n-secure-token-2026"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "maturity.scan_scheduled"
+            },
+            {
+              "name": "scanner",
+              "value": "n8n_cron_scheduler"
+            }
+          ]
+        }
+      },
+      "id": "2",
+      "name": "Trigger AICTE Maturity Scanner",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8000/api/webhooks/n8n/callback",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-AetherVault-Token",
+              "value": "n8n-secure-token-2026"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "alerts.dispatch_idempotent_emails"
+            },
+            {
+              "name": "thresholds",
+              "value": "60,30,15,7,0"
+            }
+          ]
+        }
+      },
+      "id": "3",
+      "name": "Dispatch Idempotent Email Alerts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [680, 300]
+    }
+  ],
+  "connections": {
+    "Schedule: Daily 06:00 AM Scan": {
+      "main": [
+        [
+          {
+            "node": "Trigger AICTE Maturity Scanner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger AICTE Maturity Scanner": {
+      "main": [
+        [
+          {
+            "node": "Dispatch Idempotent Email Alerts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "id": "workflow_2_maturity_reminders",
+  "active": true
+}
