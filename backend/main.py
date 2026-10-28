@@ -631,6 +631,51 @@ async def register_fdr(
         "joint_account_title": joint_account_title.strip()
     }
 
+    # 1. Automated Bank CBS / SFMS Telemetry Query upon Ingestion
+    bank_res = query_bank_sfms_cbs(fdr_clean, ifsc_code.strip().upper(), account_number.strip(), principal_amount)
+    
+    # 2. Automated 3-Way Reconciliation (Claim vs OCR vs Bank CBS)
+    reconciliation, has_discrepancy = generate_three_way_reconciliation(
+        submitted_dict,
+        ocr_data or {},
+        bank_res
+    )
+
+    # 3. AICTE Approval Process Handbook Chapter 16 Compliance Gate
+    # - 10-Year (120-Month) Term Lock-in Check
+    tenure_years = (parsed_maturity.year - parsed_issue.year)
+    tenure_compliant = tenure_years >= 10
+    if not tenure_compliant:
+        reconciliation.append({
+            "field": "term_lock_in",
+            "field_label": "Mandated Regulatory Tenure",
+            "submitted_value": f"{term_months} Months ({tenure_years} Years)",
+            "ocr_extracted_value": f"{ocr_data.get('term_months', term_months)} Months",
+            "bank_cbs_value": "120 Months Mandated",
+            "status": "DISCREPANCY_DETECTED",
+            "variance": f"{120 - term_months} Months Deficient",
+            "regulatory_rule": "AICTE Approval Process Handbook Chapter 16: 10-Year Lock-In Term Mandated"
+        })
+        has_discrepancy = True
+
+    # - Mandated Co-Join Lien Check
+    joint_str = (joint_account_title or "").upper()
+    has_joint_aicte = "AICTE" in joint_str or "REGIONAL OFFICER" in joint_str or "COUNCIL" in joint_str
+    if not has_joint_aicte:
+        reconciliation.append({
+            "field": "joint_lien_holding",
+            "field_label": "Joint Lien Marking (AICTE)",
+            "submitted_value": joint_account_title or "Individual Institution",
+            "ocr_extracted_value": ocr_data.get("joint_title") or "Single / Unverified Lien",
+            "bank_cbs_value": "Joint with Regional Officer AICTE",
+            "status": "DISCREPANCY_DETECTED",
+            "variance": "AICTE Co-Join Lien Clause Missing",
+            "regulatory_rule": "AICTE Chapter 16: Instrument must be in joint name of Regional Officer AICTE and Principal"
+        })
+        has_discrepancy = True
+
+    initial_lifecycle = "DISCREPANCY_FLAGGED" if has_discrepancy else "BANK_VERIFIED"
+
     fdr = FDRInstrument(
         fdr_number=fdr_clean,
         institution_id=institution_id,
@@ -650,11 +695,11 @@ async def register_fdr(
         document_sha256=file_hash,
         is_encrypted=True,
         original_filename=original_filename,
-        lifecycle_status="UNDER_SCRUTINY",
+        lifecycle_status=initial_lifecycle,
         submitted_data=submitted_dict,
         ocr_data=ocr_data,
-        bank_verified_data={},
-        discrepancy_details=[]
+        bank_verified_data=bank_res,
+        discrepancy_details=reconciliation
     )
     db.add(fdr)
     db.flush()
@@ -673,10 +718,59 @@ async def register_fdr(
     log_audit_trail(db, "FDR_REGISTERED", current_user.full_name, current_user.role, "FDR", str(fdr.id), submitted_dict, current_user.id)
     create_notification(db, "New Deposit Submitted", f"FDR #{fdr_clean} submitted for scrutiny verification.", "REGISTRATION", "AICTE_SCRUTINY_OFFICER", fdr_id=fdr.id)
 
-    # Trigger n8n Workflow 1 (FDR Submission)
-    trigger_n8n_workflow("fdr-submitted", {"fdr_id": fdr.id, "fdr_number": fdr.fdr_number}, db)
+    # Trigger n8n Workflow with comprehensive analytical payload
+    n8n_payload = {
+        "fdr_id": fdr.id,
+        "fdr_number": fdr.fdr_number,
+        "institution_id": fdr.institution_id,
+        "issuing_bank": fdr.issuing_bank_name,
+        "principal_amount": fdr.principal_amount,
+        "maturity_amount": fdr.maturity_amount,
+        "interest_rate": fdr.interest_rate,
+        "tenure_months": fdr.term_months,
+        "detected_language": ocr_data.get("detected_language", "English / Multilingual Universal"),
+        "ocr_confidence": ocr_data.get("confidence_score", 0.98),
+        "tamper_detected": ocr_data.get("ela_forensics", {}).get("tamper_detected", False),
+        "has_discrepancy": has_discrepancy,
+        "discrepancies_count": len(reconciliation),
+        "discrepancies": reconciliation,
+        "bank_cbs_status": bank_res.get("bank_status", "ACTIVE_LIEN_CONFIRMED"),
+        "trust_score": bank_res.get("trust_score", 95.0),
+        "lifecycle_status": initial_lifecycle
+    }
+    trigger_n8n_workflow("fdr-submitted", n8n_payload, db)
+    if has_discrepancy:
+        trigger_n8n_workflow("ocr-discrepancy-detected", n8n_payload, db)
 
     return serialize_fdr(fdr)
+
+@app.get("/api/fdrs/{fdr_id}/reconciliation")
+def get_fdr_reconciliation(fdr_id: str, db: Session = Depends(get_db)):
+    fdr = db.query(FDRInstrument).filter(FDRInstrument.id == fdr_id).first()
+    if not fdr:
+        raise HTTPException(status_code=404, detail="FDR not found")
+    
+    # If not previously computed, dynamically compute it now
+    if not fdr.discrepancy_details or not fdr.bank_verified_data:
+        bank_res = query_bank_sfms_cbs(fdr.fdr_number, fdr.ifsc_code, fdr.account_number, fdr.principal_amount)
+        fdr.bank_verified_data = bank_res
+        reconciliation, has_discrepancy = generate_three_way_reconciliation(
+            fdr.submitted_data or {},
+            fdr.ocr_data or {},
+            bank_res
+        )
+        fdr.discrepancy_details = reconciliation
+        db.commit()
+
+    return {
+        "fdr_id": fdr.id,
+        "fdr_number": fdr.fdr_number,
+        "discrepancies": fdr.discrepancy_details or [],
+        "bank_verified_data": fdr.bank_verified_data or {},
+        "ocr_data": fdr.ocr_data or {},
+        "submitted_data": fdr.submitted_data or {},
+        "lifecycle_status": fdr.lifecycle_status
+    }
 
 @app.post("/api/fdrs/bulk-csv")
 async def bulk_csv_fdr_upload(

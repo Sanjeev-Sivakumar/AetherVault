@@ -192,16 +192,16 @@ MULTILINGUAL_BANK_PATTERNS = [
     (r'(?:HDFC\s*BANK|HDFC|एचडीएफसी\s*बैंक|ஹெச்டிஎஃப்சி|హెచ్‌డిఎఫ్‌సి|এইচডিএফসি|HDFC)', "HDFC Bank", "Connaught Place Branch"),
     (r'(?:ICICI\s*BANK|ICICI|आईसीआईसीआई\s*बैंक|ஐசிஐசிஐ|ఐసీఐసీఐ|আইসিআইসিআই|ICIC)', "ICICI Bank", "BKC Corporate Branch"),
     (r'(?:UNION\s*BANK\s*OF\s*INDIA|UBI|यूनियन\s*बैंक\s*ऑफ\s*इंडिया|யூனியன்\s*வங்கி|యూనియన్\s*బ్యాంక్|ইউনিয়ন\s*ব্যাংক|UBIN)', "Union Bank of India", "New Delhi Main Branch"),
-    (r'(?:CENTRAL\s*BANK\s*OF\s*INDIA|सेंट्रल\s*बैंक\s*ऑफ\s*इंडिया|சென்ட்ரல்\s*வங்கி|CBIN)', "Central Bank of India", "Civil Lines Branch"),
+    (r'(?:CENTRAL\s*BANK\s*OF\s*INDIA|सेंट्रल\s*बैंक|सेन्ट्रल\s*बैंक|सेंट्रल\s*बैंक\s*ऑफ\s*इंडिया|सेन्ट्रल\s*बैंक\s*ऑफ़\s*इंडिया|CBIN)', "Central Bank of India", "Civil Lines Branch"),
     (r'(?:INDIAN\s*BANK|इंडियन\s*बैंक|இந்தியன்\s*வங்கி|ఇండియన్\s*బ్యాంక్|IDIB)', "Indian Bank", "Chennai Harbour Branch"),
     (r'(?:BANK\s*OF\s*INDIA|BOI|बैंक\s*ऑफ\s*इंडिया|BKID)', "Bank of India", "Bandra Kurla Branch")
 ]
 
 MULTILINGUAL_DEPOSIT_KEYWORDS = [
     # English
-    "FIXED DEPOSIT", "DEPOSIT RECEIPT", "TERM DEPOSIT", "SPECIAL DEPOSIT", "FDR", "TDR", "STDR", "LIEN MARKED", "LIEN IN FAVOR OF AICTE", "AICTE", "CALL DEPOSIT", "SECURITY DEPOSIT",
+    "FIXED DEPOSIT", "DEPOSIT RECEIPT", "TERM DEPOSIT", "TERM DEPOSIT RECEIPT", "SPECIAL DEPOSIT", "FDR", "TDR", "STDR", "CCTDR", "JAIDIV", "LIEN MARKED", "LIEN IN FAVOR OF AICTE", "AICTE", "CALL DEPOSIT", "SECURITY DEPOSIT",
     # Hindi / Devanagari
-    "सावधि जमा", "मियादी जमा", "जमा रसीद", "सावधि", "मियादी", "मुदत ठेव", "अखिल भारतीय तकनीकी शिक्षा परिषद", "एआईसीटीई", "धरोहर", "ग्रहणाधिकार",
+    "सावधि जमा", "मियादी जमा", "जमा रसीद", "सावधि", "मियादी", "मुदत ठेव", "सा.ज.र.", "सा ज र", "अखिल भारतीय तकनीकी शिक्षा परिषद", "एआईसीटीई", "धरोहर", "ग्रहणाधिकार",
     # Tamil
     "நிலையான வைப்பு", "வைப்பு ரசீது", "பற்றுரிமை", "ஏஐசிடிஇ", "வைப்பு",
     # Telugu
@@ -546,13 +546,13 @@ def extract_fdr_fields_from_ocr(image_bytes: bytes, fallback_fdr_num: str = "", 
     detected_lang = (gemini_data.get("detected_language") if gemini_data else None) or detect_text_script_language(extracted_text)
 
     # Regex extraction
-    fdr_num_match = re.search(r'(?:FDR|FD|RECEIPT|REF|DEPOSIT|रसीद|पावती|ரசீது|రసీదు)[\s:\.\#-]*([A-Z0-9\-/]{6,25})', parsed_text, re.I)
-    pattern_match = re.search(r'([A-Z]{3,4}-[A-Z0-9\-]{5,20})', parsed_text)
+    fdr_num_match = re.search(r'(?:No\.?\s*N?|FDR|FD|RECEIPT|REF|DEPOSIT|रसीद|पावती|ரசீது|రసీదు|सं\.?|CCTDR)[\s:\.\#-]*([A-Z0-9\-/]{5,25})', parsed_text, re.I)
+    pattern_match = re.search(r'([A-Z]{3,4}-[A-Z0-9\-]{5,20}|[0-9]{6,12})', parsed_text)
     amt_match = re.search(r'(?:RS\.?|INR|AMOUNT|PRINCIPAL|रुपये|मूलधन|राशि|தொகை|మొత్తం)[\s:\.]*([0-9,]+(?:\.[0-9]{2})?)', parsed_text, re.I)
     mat_amt_match = re.search(r'(?:MATURITY|MAT\.?\s*VAL|परिपक्वता|முதிர்வு|పరిపక్వత)[\s:\.]*([0-9,]+(?:\.[0-9]{2})?)', parsed_text, re.I)
     ifsc_match = re.search(r'([A-Z]{4}0[A-Z0-9]{6})', parsed_text)
-    acc_match = re.search(r'(?:A\/C|AC|ACC|ACCOUNT|DEPOSIT|खाता|கணக்கு|ఖాతా)[\s:\.\#-]*([0-9]{9,16})', parsed_text, re.I)
-    rate_match = re.search(r'([0-9]+(?:\.[0-9]+)?)\s*%\s*(?:PA|P\.A\.|वार्षिक|ஆண்டு)?', parsed_text, re.I)
+    acc_match = re.search(r'(?:A\/C|AC|ACC|ACCOUNT|DEPOSIT|खाता|கணக்கு|ఖాతా)(?:[\s:\.\#\-/]*No\.?)?[\s:\.\#-]*([0-9]{9,16})', parsed_text, re.I)
+    rate_match = re.search(r'([0-9]+(?:\.[0-9]+)?)\s*%\s*(?:PA|P\.A\.|वार्षिक|ஆண்டு)?|Int\.?\s*Rate\s*([0-9]+(?:\.[0-9]+)?)', parsed_text, re.I)
     date_matches = re.findall(r'(\d{4}[/-]\d{2}[/-]\d{2}|\d{2}[/-]\d{2}[/-]\d{4})', parsed_text)
 
     quality = inspect_document_quality(image_bytes)
@@ -565,7 +565,8 @@ def extract_fdr_fields_from_ocr(image_bytes: bytes, fallback_fdr_num: str = "", 
     if maturity_amt <= principal_amt:
         maturity_amt = round(principal_amt * 2.056, 2)
 
-    interest_rate = float(rate_match.group(1)) if rate_match else 7.25
+    matched_rate = (rate_match.group(1) or rate_match.group(2)) if rate_match else None
+    interest_rate = float(matched_rate) if matched_rate else 7.25
 
     # Safe FDR number resolution
     raw_num = fdr_num_match.group(1).strip() if fdr_num_match else ""

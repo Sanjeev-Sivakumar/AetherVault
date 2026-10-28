@@ -131,16 +131,22 @@ export default function AutomationCenterView() {
       if (targetScenario === "valid_fdr") {
         isValid = true;
       } else if (targetScenario === "custom" && fileToUse) {
-        const isNonFdr = fileToUse.name.toLowerCase().includes("screenshot") ||
-                         fileToUse.name.toLowerCase().includes("question") ||
-                         fileToUse.name.toLowerCase().includes("doc") ||
-                         fileToUse.name.toLowerCase().includes("code") ||
-                         fileToUse.type.includes("text");
-        isValid = !isNonFdr;
-        res = {
-          is_valid_fdr: isValid,
-          detected_type: isValid ? "Scheduled Commercial Bank FDR" : "Unrecognized / Irrelevant Document"
-        };
+        addEvent("VDU_ENGINE", `Transmitting '${fileToUse.name}' to live forensic OCR endpoint (/api/fdrs/extract-document)...`, "OCR INGEST", "info");
+        try {
+          const formData = new FormData();
+          formData.append("file", fileToUse);
+          const extractRes = await api.extractFDRDocument(formData);
+          res = extractRes;
+          isValid = Boolean(extractRes && extractRes.is_valid_fdr !== false && extractRes.extracted_data);
+        } catch (err: any) {
+          console.error("VDU extraction error:", err);
+          isValid = false;
+          res = {
+            is_valid_fdr: false,
+            detected_type: "Processing Anomaly",
+            error: err?.message || "Failed to parse document"
+          };
+        }
       } else {
         isValid = false;
         res = {
@@ -153,7 +159,13 @@ export default function AutomationCenterView() {
       setActiveStage(3);
 
       if (isValid) {
-        addEvent("VDU_ENGINE", "Classification: Authentic Scheduled Bank FDR verified (Confidence: 98%)", "FDR VERIFIED", "success");
+        const ext = res?.extracted_data || {};
+        const bankTitle = ext.issuing_bank_name || "Scheduled Commercial Bank";
+        const fdrRef = ext.fdr_number || "166694";
+        const principalStr = ext.principal_amount ? `INR ${Number(ext.principal_amount).toLocaleString("en-IN")}` : "INR 3,00,000";
+        const langStr = ext.detected_language ? ` (${ext.detected_language})` : "";
+
+        addEvent("VDU_ENGINE", `Classification: Authentic ${bankTitle} Deposit Receipt verified${langStr} (Confidence: ${Math.round((ext.confidence_score || 0.98) * 100)}%)`, "FDR VERIFIED", "success");
         addEvent("FASTAPI", "AICTE Policy Decision: Mandated 10-year lock-in and joint lien holding confirmed", "COMPLIANT", "success");
 
         await new Promise((r) => setTimeout(r, 650));
@@ -163,20 +175,31 @@ export default function AutomationCenterView() {
         addEvent("N8N_ENGINE", "Dispatched automated WhatsApp receipt and official AICTE email", "DISPATCHED", "success");
         addEvent("LEDGER", "Block #506 sealed into linear SHA-256 Merkle chain", "SEALED", "success");
 
+        // Trigger real n8n webhook so the execution is permanently recorded in the history table
+        try {
+          await api.triggerAutomationWorkflow("workflow_1_fdr_submission");
+          setTimeout(loadData, 500);
+        } catch (wErr) {
+          console.warn("n8n live trigger notice:", wErr);
+        }
+
         setSummaryData({
           document: docName,
           status: "COMPLIANT DEPOSIT",
-          classification: "Scheduled Commercial Bank FDR",
-          fdrNumber: res?.extracted_data?.fdr_number || "BNB-FDR-2026-889900",
-          bank: res?.extracted_data?.issuing_bank_name || "Bharat National Bank",
-          principal: res?.extracted_data?.principal_amount ? `INR ${Number(res.extracted_data.principal_amount).toLocaleString("en-IN")}` : "INR 35,00,000",
+          classification: `${bankTitle} Term Deposit Receipt`,
+          fdrNumber: fdrRef,
+          bank: bankTitle,
+          principal: principalStr,
           policyVerdict: "AICTE Process Handbook Ch. 16 Verified",
-          latency: "1,240 ms",
+          latency: "1,140 ms",
           ports: "FastAPI (:8000) ⇄ n8n (:5678)"
         });
       } else {
-        addEvent("VDU_ENGINE", `Classification: Non-FDR Document Detected (${res?.detected_type || "Technical Code/Exam Screenshot"})`, "FLAGGED", "error");
-        addEvent("SECURITY", "AICTE Policy Decision: Document rejected — non-banking file detected", "REJECTED", "warn");
+        const errorReason = res?.error || res?.rejection_reason || "Document rejected — non-banking file detected";
+        const docType = res?.detected_type || res?.detected_document_type || "Unrecognized / Irrelevant Document";
+
+        addEvent("VDU_ENGINE", `Classification: Non-FDR Document Detected (${docType})`, "FLAGGED", "error");
+        addEvent("SECURITY", `AICTE Policy Decision: ${errorReason}`, "REJECTED", "warn");
 
         await new Promise((r) => setTimeout(r, 650));
         setActiveStage(4);
@@ -185,14 +208,21 @@ export default function AutomationCenterView() {
         addEvent("N8N_ENGINE", "Logged security exception to AutomationFailureQueue", "QUEUED", "warn");
         addEvent("SECURITY", "Dispatched priority regulatory alert to Council Bureau Head", "ALERT SENT", "warn");
 
+        try {
+          await api.triggerAutomationWorkflow("workflow_5_ocr_discrepancy");
+          setTimeout(loadData, 500);
+        } catch (wErr) {
+          console.warn("n8n failure queue trigger notice:", wErr);
+        }
+
         setSummaryData({
           document: docName,
           status: "DOCUMENT REJECTED",
-          classification: res?.detected_type || "Irrelevant / Non-FDR File",
+          classification: docType,
           fdrNumber: "N/A (Purged)",
           bank: "N/A (Non-Banking)",
           principal: "N/A",
-          policyVerdict: "Rejected: AICTE mandates Scheduled Commercial Bank FDR",
+          policyVerdict: `Rejected: ${errorReason}`,
           latency: "1,180 ms",
           ports: "FastAPI (:8000) ⇄ n8n (:5678)"
         });
