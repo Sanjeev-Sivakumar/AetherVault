@@ -295,22 +295,6 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
               Zero-Trust Security Deposit Architecture for AICTE regulatory oversight.
             </p>
 
-            {/* Micro Feature Indicators */}
-            <div className="mt-6 space-y-2.5">
-              <div className="flex items-center space-x-2.5 text-xs font-light text-slate-300">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0"></span>
-                <span>3-Way Bank CBS & SFMS Reconciliation</span>
-              </div>
-              <div className="flex items-center space-x-2.5 text-xs font-light text-slate-300">
-                <span className="h-1.5 w-1.5 rounded-full bg-blue-400 shrink-0"></span>
-                <span>Smart Release Engine with 10-Yr Lock-in Checks</span>
-              </div>
-              <div className="flex items-center space-x-2.5 text-xs font-light text-slate-300">
-                <span className="h-1.5 w-1.5 rounded-full bg-purple-400 shrink-0"></span>
-                <span>SHA-256 Tamper-Evident Append-Only Ledger</span>
-              </div>
-            </div>
-
             {/* Active Security Specs Card */}
             <div className="mt-8 p-3.5 rounded-2xl bg-white/5 border border-white/10 text-[11px] font-light text-slate-300 space-y-1.5">
               <div className="flex items-center justify-between text-slate-400 text-[10px]">
