@@ -168,7 +168,7 @@ export default function Home() {
                   RBAC Security Policy Violation
                 </span>
 
-                <h3 className="text-xl font-bold text-slate-900 tracking-tight">
+                <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">
                   Higher Security Clearance Required
                 </h3>
 

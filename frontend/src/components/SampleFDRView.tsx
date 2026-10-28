@@ -8,10 +8,10 @@ export default function SampleFDRView() {
     <div className="p-6 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-lg font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
             Sample FDR Generator
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs font-medium text-slate-500">
             Synthetic Test Records
           </p>
         </div>
@@ -36,7 +36,7 @@ export default function SampleFDRView() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Document Preview */}
         <div className="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
-          <span className="text-xs font-bold text-slate-800 block mb-2">Live Watermarked Instrument Rendering</span>
+          <span className="text-sm font-bold text-slate-900 block mb-2">Live Watermarked Instrument Rendering</span>
           <div className="rounded-xl border border-slate-200 bg-slate-100 p-2 overflow-hidden flex items-center justify-center">
             <img
               src="/sample_synthetic_fdr.png"
@@ -50,7 +50,7 @@ export default function SampleFDRView() {
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs space-y-4">
           <div className="flex items-center space-x-2">
             <ShieldCheck className="h-5 w-5 text-emerald-600" />
-            <h2 className="text-xs font-bold text-slate-900">Computer Vision Quality Assessment</h2>
+            <h2 className="text-base font-bold text-slate-900">Computer Vision Quality Assessment</h2>
           </div>
 
           <div className="space-y-3 text-xs">

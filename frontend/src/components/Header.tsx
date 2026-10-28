@@ -81,10 +81,10 @@ export default function Header({
     <header className="flex h-20 w-full items-center justify-between px-8 bg-white border-b border-slate-100">
       {/* Left: Greeting with Dynamic Subtitle */}
       <div>
-        <h1 className="text-xl font-semibold tracking-tight text-slate-800">
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
           Hello {firstName}
         </h1>
-        <p className="text-xs font-normal text-slate-400 mt-0.5">
+        <p className="text-sm font-bold text-slate-600 mt-0.5">
           {getSubtitle()}
         </p>
       </div>
@@ -129,10 +129,10 @@ export default function Header({
           {showPersonaMenu && (
             <div className="absolute right-0 mt-2 w-80 rounded-2xl border border-slate-100 bg-white p-2.5 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150">
               <div className="px-3 py-2 border-b border-slate-100 mb-1">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-700">
                   Switch Regulatory Perspective (RBAC)
                 </p>
-                <p className="text-[11px] font-light text-slate-500 mt-0.5">
+                <p className="text-xs font-medium text-slate-500 mt-0.5">
                   Select an authenticated role to evaluate permission boundaries
                 </p>
               </div>
@@ -190,7 +190,7 @@ export default function Header({
             {showNotifications && (
               <div className="absolute right-0 mt-3 w-84 rounded-2xl border border-slate-100 bg-white p-4 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-                  <span className="text-xs font-bold text-slate-900">Notifications ({unreadCount})</span>
+                  <span className="text-sm font-bold text-slate-900">Notifications ({unreadCount})</span>
                 </div>
                 <div className="mt-2 max-h-72 space-y-2 overflow-y-auto pr-1">
                   {notifications.length === 0 ? (

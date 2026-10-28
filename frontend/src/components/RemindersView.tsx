@@ -45,10 +45,10 @@ export default function RemindersView() {
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-lg font-bold text-slate-900 tracking-tight">
+        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
           Alert Schedules
         </h1>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs font-medium text-slate-500">
           Automated Dispatch Rules
         </p>
       </div>
@@ -56,8 +56,8 @@ export default function RemindersView() {
       {/* SMTP Live Test Box */}
       <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs space-y-3">
         <div>
-          <h2 className="text-xs font-bold text-slate-900">Live Transactional SMTP Dispatch</h2>
-          <p className="text-[11px] text-slate-500">Host: smtp.gmail.com:465</p>
+          <h2 className="text-base font-bold text-slate-900">Live Transactional SMTP Dispatch</h2>
+          <p className="text-[11px] text-slate-500 font-medium">Host: smtp.gmail.com:465</p>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center gap-2 pt-1">
@@ -92,8 +92,8 @@ export default function RemindersView() {
       <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs space-y-4">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <div>
-            <h2 className="text-xs font-bold text-slate-900">Configurable Notification Schedule (Days Before Maturity)</h2>
-            <p className="text-[11px] text-slate-500">Enable or disable specific channels per reminder threshold</p>
+            <h2 className="text-base font-bold text-slate-900">Configurable Notification Schedule (Days Before Maturity)</h2>
+            <p className="text-[11px] text-slate-500 font-medium">Enable or disable specific channels per reminder threshold</p>
           </div>
           <button
             onClick={handleSaveConfigs}
@@ -105,8 +105,8 @@ export default function RemindersView() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 font-semibold text-slate-600 text-[11px] border-b border-slate-200">
+          <table className="w-full text-left text-xs font-medium">
+            <thead className="bg-slate-50 font-bold text-slate-700 text-xs uppercase tracking-wider border-b border-slate-200">
               <tr>
                 <th className="py-2.5 px-3">Interval (Days Before)</th>
                 <th className="py-2.5 px-3">SMTP Email</th>

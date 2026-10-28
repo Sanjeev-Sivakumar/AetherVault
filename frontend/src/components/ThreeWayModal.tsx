@@ -139,7 +139,7 @@ export default function ThreeWayModal({
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h2 className="text-base font-extrabold text-slate-900 tracking-tight">
+                <h2 className="text-xl font-bold text-slate-900 tracking-tight">
                   Three-Way Reconciliation: FDR #{fdr.fdr_number}
                 </h2>
                 <span className="rounded-full bg-blue-50 border border-blue-200/60 px-2.5 py-0.5 text-[10px] font-bold text-blue-800">
@@ -211,7 +211,7 @@ export default function ThreeWayModal({
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
               <div className="flex items-center justify-between mb-2">
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900">Cognitive Regulatory Audit</h3>
+                  <h3 className="text-base font-bold text-slate-900">Cognitive Regulatory Audit</h3>
                   <div className="text-xs text-slate-500 font-medium">
                     {geminiResult.verdict || "Regulatory Assessment"} • Compliance Score: {geminiResult.compliance_score || 95}%
                   </div>
@@ -244,7 +244,7 @@ export default function ThreeWayModal({
               <div className="flex items-start space-x-3">
                 <AlertTriangle className="h-5 w-5 text-rose-600 mt-0.5 shrink-0" />
                 <div className="flex-1">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-rose-900">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-rose-900">
                     {discrepancies.length} Regulatory Discrepancies Detected During OCR Scrutiny
                   </h3>
                   <div className="mt-2 space-y-1.5">
@@ -296,7 +296,7 @@ export default function ThreeWayModal({
             <div className="rounded-xl border border-slate-200 bg-white p-6 space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900">Complete Instrument Lifecycle & Version Lineage</h3>
+                  <h3 className="text-base font-bold text-slate-900">Complete Instrument Lifecycle & Version Lineage</h3>
                   <p className="text-xs text-slate-500">
                     Immutable history of instrument snapshots, renewal/replacement links, verification transitions, and nodal user accountability.
                   </p>
@@ -359,7 +359,7 @@ export default function ThreeWayModal({
                 <div className="border-b border-blue-200 pb-2 flex items-center justify-between">
                   <div className="flex items-center space-x-1.5">
                     <Building2 className="h-4 w-4 text-blue-800" />
-                    <h3 className="text-xs font-bold text-blue-900 uppercase tracking-wider">1. Institution Submitted</h3>
+                    <h3 className="text-sm font-bold text-blue-950 uppercase tracking-wider">1. Institution Submitted</h3>
                   </div>
                   <span className="rounded bg-blue-100 px-1.5 py-0.5 text-[10px] font-semibold text-blue-800">Application</span>
                 </div>
@@ -408,7 +408,7 @@ export default function ThreeWayModal({
                 <div className="border-b border-slate-200 pb-2 flex items-center justify-between">
                   <div className="flex items-center space-x-1.5">
                     <FileText className="h-4 w-4 text-indigo-700" />
-                    <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">2. AI Forensics & OCR Vision</h3>
+                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">2. AI Forensics & OCR Vision</h3>
                   </div>
                   <span className="rounded bg-indigo-100 px-1.5 py-0.5 text-[10px] font-semibold text-indigo-800">
                     Conf: {Math.round((ocrData.confidence_score || 0.95) * 100)}%
@@ -484,7 +484,7 @@ export default function ThreeWayModal({
               <div className="rounded-xl border border-teal-200 bg-teal-50/20 p-4 space-y-4">
                 <div className="border-b border-teal-200 pb-2 flex items-center justify-between">
                   <div className="flex items-center space-x-1.5">
-                    <h3 className="text-xs font-bold text-teal-900 uppercase tracking-wider">3. Bank CBS / SFMS</h3>
+                    <h3 className="text-sm font-bold text-teal-950 uppercase tracking-wider">3. Bank CBS / SFMS</h3>
                   </div>
                   <span
                     className={`rounded px-1.5 py-0.5 text-[10px] font-semibold ${

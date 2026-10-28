@@ -15,13 +15,13 @@ export default function TitleSlidePage() {
         {/* Editorial Serif Main Title & Italic Subtitle */}
         <div className="space-y-1">
           <h1
-            className="text-6xl md:text-7xl tracking-tight text-slate-950 font-semibold"
+            className="text-7xl md:text-8xl tracking-tight text-slate-950 font-extrabold"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
             AetherVault Ledger
           </h1>
           <h2
-            className="text-5xl md:text-6xl text-emerald-950 tracking-tight italic font-medium"
+            className="text-5xl md:text-6xl text-emerald-950 tracking-tight italic font-bold"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
             The Autonomous AICTE Escrow & Deposit Oracle

@@ -92,12 +92,12 @@ export default function Sidebar({
           {!collapsed && (
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-black text-base tracking-tight text-slate-900">AetherVault</span>
+                <span className="font-black text-lg tracking-tight text-slate-900">AetherVault</span>
                 <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/50">
                   AICTE
                 </span>
               </div>
-              <p className="text-[10px] font-medium text-slate-400 -mt-0.5">Zero-Trust FDR Shield</p>
+              <p className="text-[10px] font-semibold text-slate-500 -mt-0.5">Zero-Trust FDR Shield</p>
             </div>
           )}
         </div>
@@ -114,13 +114,13 @@ export default function Sidebar({
               <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-emerald-500 ring-2 ring-white"></span>
             </div>
             <div className="min-w-0 flex-1">
-              <h4 className="text-xs font-bold text-slate-900 truncate">{displayName}</h4>
+              <h4 className="text-sm font-bold text-slate-900 truncate">{displayName}</h4>
               <div className="flex items-center gap-1 mt-0.5">
                 <span className="text-[9px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200/60 truncate">
                   {roleConfig.badge}
                 </span>
               </div>
-              <p className="text-[9px] font-light text-slate-400 truncate mt-0.5">{roleConfig.clearanceLevel}</p>
+              <p className="text-[9px] font-medium text-slate-500 truncate mt-0.5">{roleConfig.clearanceLevel}</p>
             </div>
           </div>
         ) : (
@@ -137,7 +137,7 @@ export default function Sidebar({
         <div className="space-y-1">
           {!collapsed && (
             <div className="flex items-center justify-between px-3 mb-2">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-700">
                 Authorized Operations
               </p>
               <span className="text-[9px] font-mono text-emerald-600 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200/50">
@@ -168,7 +168,7 @@ export default function Sidebar({
         {visibleSecondaryNav.length > 0 && (
           <div className="mt-5 space-y-1">
             {!collapsed && (
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 mb-2">
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-700 px-3 mb-2">
                 Management Desk
               </p>
             )}

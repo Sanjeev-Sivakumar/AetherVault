@@ -96,7 +96,7 @@ export default function AuditView() {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-xl font-normal text-slate-900 tracking-tight">
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
             Audit Ledger
           </h2>
           <p className="text-xs font-light text-slate-400 mt-0.5">
@@ -160,40 +160,40 @@ export default function AuditView() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="rounded-[28px] border border-slate-100 bg-white p-5 shadow-xs">
           <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-light">Total Blocks Sealed</span>
+            <span className="text-sm font-bold text-slate-900">Total Blocks Sealed</span>
             <Layers className="h-4 w-4 text-slate-400" />
           </div>
-          <div className="text-2xl font-normal text-slate-900 tracking-tight font-mono">
+          <div className="text-2xl font-bold text-slate-900 tracking-tight font-mono">
             {verificationResult?.total_records || logs.length || 1005}{" "}
-            <span className="text-xs font-light text-slate-400">Blocks</span>
+            <span className="text-xs font-semibold text-slate-400">Blocks</span>
           </div>
-          <p className="text-[11px] font-light text-slate-400 mt-1">
+          <p className="text-[11px] font-medium text-slate-500 mt-1">
             Zero hash collisions • Genesis block verified
           </p>
         </div>
 
         <div className="rounded-[28px] border border-emerald-100 bg-[#eafaf1] p-5 shadow-xs">
           <div className="flex items-center justify-between text-emerald-600 mb-2">
-            <span className="text-xs font-light">Tamper Protection Status</span>
+            <span className="text-sm font-bold text-emerald-900">Tamper Protection Status</span>
             <ShieldCheck className="h-4 w-4 text-emerald-600" />
           </div>
-          <div className="text-2xl font-normal text-emerald-900 tracking-tight">
+          <div className="text-2xl font-bold text-emerald-900 tracking-tight">
             100% Intact
           </div>
-          <p className="text-[11px] font-light text-emerald-700 mt-1">
+          <p className="text-[11px] font-medium text-emerald-700 mt-1">
             Autonomous system lockdown ready on hash breach
           </p>
         </div>
 
         <div className="rounded-[28px] border border-slate-100 bg-white p-5 shadow-xs">
           <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-light">Cryptographic Standard</span>
+            <span className="text-sm font-bold text-slate-900">Cryptographic Standard</span>
             <Lock className="h-4 w-4 text-slate-400" />
           </div>
-          <div className="text-2xl font-normal text-slate-900 tracking-tight">
+          <div className="text-2xl font-bold text-slate-900 tracking-tight">
             SHA-256 + AES
           </div>
-          <p className="text-[11px] font-light text-slate-400 mt-1">
+          <p className="text-[11px] font-medium text-slate-500 mt-1">
             AES-256-GCM Vault • PBKDF2 Session Signing
           </p>
         </div>
@@ -203,7 +203,7 @@ export default function AuditView() {
       <div className="rounded-[32px] border border-slate-100 bg-white p-6 shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-sm font-normal text-slate-900">
+            <h3 className="text-base font-bold text-slate-900">
               Cryptographic Block Generation & Sealing Velocity
             </h3>
             <p className="text-xs font-light text-slate-400">
@@ -250,8 +250,8 @@ export default function AuditView() {
       {/* Main Immutable Audit Table */}
       <div className="overflow-hidden rounded-[32px] border border-slate-100 bg-white shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs font-light">
-            <thead className="border-b border-slate-100 bg-slate-50/70 text-slate-500 text-[11px] font-normal uppercase tracking-wider">
+          <table className="w-full text-left text-xs font-medium">
+            <thead className="border-b border-slate-100 bg-slate-50/70 text-slate-700 text-xs font-bold uppercase tracking-wider">
               <tr>
                 <th className="py-3 px-4">Timestamp</th>
                 <th className="py-3 px-4">Action Event</th>

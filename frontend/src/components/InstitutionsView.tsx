@@ -75,7 +75,7 @@ export default function InstitutionsView({ institutions }: InstitutionsViewProps
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-xl font-normal text-slate-900 tracking-tight">
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
             Institutions Directory
           </h2>
           <p className="text-xs font-light text-slate-400 mt-0.5">
@@ -99,7 +99,7 @@ export default function InstitutionsView({ institutions }: InstitutionsViewProps
         {/* Category Breakdown */}
         <div className="rounded-[32px] border border-slate-100 bg-white p-5 shadow-sm">
           <div className="mb-3">
-            <h3 className="text-xs font-semibold text-slate-900">
+            <h3 className="text-sm font-bold text-slate-900">
               Category Distribution
             </h3>
             <p className="text-[11px] font-light text-slate-400">
@@ -142,7 +142,7 @@ export default function InstitutionsView({ institutions }: InstitutionsViewProps
         <div className="rounded-[32px] border border-slate-100 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h3 className="text-xs font-normal text-slate-900">
+              <h3 className="text-sm font-bold text-slate-900">
                 Geographic Presence & State Concentration
               </h3>
               <p className="text-[11px] font-light text-slate-400">
@@ -196,9 +196,9 @@ export default function InstitutionsView({ institutions }: InstitutionsViewProps
                 <span className="font-mono text-xs font-normal text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-200/60">
                   {inst.aicte_permanent_id}
                 </span>
-                <span className="text-[10px] font-light text-slate-400">{inst.institution_type}</span>
+                <span className="text-[10px] font-semibold text-slate-500">{inst.institution_type}</span>
               </div>
-              <h3 className="mt-2 text-xs font-normal text-slate-900 leading-snug">{inst.name}</h3>
+              <h3 className="mt-2 text-sm font-bold text-slate-900 leading-snug">{inst.name}</h3>
               <div className="mt-3 space-y-1.5 text-[11px] text-slate-500 font-light">
                 <div className="flex items-center space-x-2">
                   <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />

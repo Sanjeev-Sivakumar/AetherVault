@@ -143,7 +143,7 @@ export default function ReleasesView({
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-xl font-normal text-slate-900 tracking-tight">
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
             Release & Refund
           </h2>
           <p className="text-xs font-light text-slate-400 mt-0.5">
@@ -186,52 +186,52 @@ export default function ReleasesView({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="rounded-[28px] border border-slate-100 bg-white p-5 shadow-xs">
           <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-light">Total Claims Logged</span>
+            <span className="text-sm font-bold text-slate-900">Total Claims Logged</span>
             <Scale className="h-4 w-4 text-slate-400" />
           </div>
-          <div className="text-2xl font-normal text-slate-900 tracking-tight">
-            {totalClaimsCount || 4} <span className="text-xs font-light text-slate-400">Claims</span>
+          <div className="text-2xl font-bold text-slate-900 tracking-tight">
+            {totalClaimsCount || 4} <span className="text-xs font-semibold text-slate-400">Claims</span>
           </div>
-          <p className="text-[11px] font-light text-slate-400 mt-1">
+          <p className="text-[11px] font-medium text-slate-500 mt-1">
             Total Claimed Volume: ₹{(totalClaimedAmt / 10000000 || 1.4).toFixed(2)} Cr
           </p>
         </div>
 
         <div className="rounded-[28px] border border-blue-100 bg-[#eef5fc] p-5 shadow-xs">
           <div className="flex items-center justify-between text-blue-600 mb-2">
-            <span className="text-xs font-light">Under Maker Scrutiny</span>
+            <span className="text-sm font-bold text-blue-900">Under Maker Scrutiny</span>
             <Clock className="h-4 w-4 text-blue-600" />
           </div>
-          <div className="text-2xl font-normal text-blue-900 tracking-tight">
-            {pendingScrutinyCount || 2} <span className="text-xs font-light text-blue-700">Awaiting Maker</span>
+          <div className="text-2xl font-bold text-blue-900 tracking-tight">
+            {pendingScrutinyCount || 2} <span className="text-xs font-semibold text-blue-700">Awaiting Maker</span>
           </div>
-          <p className="text-[11px] font-light text-blue-700 mt-1">
+          <p className="text-[11px] font-medium text-blue-700 mt-1">
             Validating 10-Yr lock-in & student litigations
           </p>
         </div>
 
         <div className="rounded-[28px] border border-purple-100 bg-[#f3eefa] p-5 shadow-xs">
           <div className="flex items-center justify-between text-purple-600 mb-2">
-            <span className="text-xs font-light">Pending Council Approval</span>
+            <span className="text-sm font-bold text-purple-900">Pending Council Approval</span>
             <FileText className="h-4 w-4 text-purple-600" />
           </div>
-          <div className="text-2xl font-normal text-purple-900 tracking-tight">
-            {pendingApprovalCount || 1} <span className="text-xs font-light text-purple-700">Ready for Voucher</span>
+          <div className="text-2xl font-bold text-purple-900 tracking-tight">
+            {pendingApprovalCount || 1} <span className="text-xs font-semibold text-purple-700">Ready for Voucher</span>
           </div>
-          <p className="text-[11px] font-light text-purple-700 mt-1">
+          <p className="text-[11px] font-medium text-purple-700 mt-1">
             Scrutiny clearance passed by Regional Officer
           </p>
         </div>
 
         <div className="rounded-[28px] border border-emerald-100 bg-[#eafaf1] p-5 shadow-xs">
           <div className="flex items-center justify-between text-emerald-600 mb-2">
-            <span className="text-xs font-light">Approved & Discharged</span>
+            <span className="text-sm font-bold text-emerald-900">Approved & Discharged</span>
             <BadgeCheck className="h-4 w-4 text-emerald-600" />
           </div>
-          <div className="text-2xl font-normal text-emerald-900 tracking-tight">
-            {approvedCount || 1} <span className="text-xs font-light text-emerald-700">Vouchers Sealed</span>
+          <div className="text-2xl font-bold text-emerald-900 tracking-tight">
+            {approvedCount || 1} <span className="text-xs font-semibold text-emerald-700">Vouchers Sealed</span>
           </div>
-          <p className="text-[11px] font-light text-emerald-700 mt-1">
+          <p className="text-[11px] font-medium text-emerald-700 mt-1">
             Cleared: ₹{(totalApprovedAmt / 10000000 || 0.35).toFixed(2)} Cr
           </p>
         </div>
@@ -241,7 +241,7 @@ export default function ReleasesView({
       <div className="rounded-[32px] border border-slate-100 bg-white p-6 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
           <div>
-            <h3 className="text-sm font-normal text-slate-900">
+            <h3 className="text-base font-bold text-slate-900">
               Regulatory Release & Refund Funnel Analytics
             </h3>
             <p className="text-xs font-light text-slate-400">
@@ -303,8 +303,8 @@ export default function ReleasesView({
       {/* Main Table Queue */}
       <div className="overflow-hidden rounded-[32px] border border-slate-100 bg-white shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs font-light">
-            <thead className="border-b border-slate-100 bg-slate-50/70 text-slate-500 text-[11px] font-normal uppercase tracking-wider">
+          <table className="w-full text-left text-xs font-medium">
+            <thead className="border-b border-slate-100 bg-slate-50/70 text-slate-700 text-xs font-bold uppercase tracking-wider">
               <tr>
                 <th className="py-3 px-4">Claim Ref No</th>
                 <th className="py-3 px-4">FDR Instrument</th>
@@ -427,7 +427,7 @@ export default function ReleasesView({
                   <Scale className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900">
+                  <h3 className="text-base font-bold text-slate-900">
                     Court-Ready Invocation & Recovery Legal Dossier
                   </h3>
                   <p className="text-[11px] text-slate-500 font-mono">

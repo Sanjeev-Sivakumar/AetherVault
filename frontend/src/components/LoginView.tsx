@@ -287,11 +287,11 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
             </div>
 
             {/* Core Value Proposition */}
-            <h2 className="text-xl md:text-2xl font-light text-white leading-snug">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-white leading-snug tracking-tight">
               Autonomous Financial Surveillance & Escrow Governance
             </h2>
 
-            <p className="mt-2 text-xs font-light text-slate-400">
+            <p className="mt-2 text-sm font-medium text-slate-300">
               Zero-Trust Security Deposit Architecture for AICTE regulatory oversight.
             </p>
 
@@ -345,7 +345,7 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
                 <ShieldCheck className="h-7 w-7 text-emerald-600 absolute" />
               </div>
               
-              <h3 className="text-base font-normal text-slate-900">
+              <h3 className="text-lg font-bold text-slate-900">
                 Cryptographic Authentication & Audit Sealing
               </h3>
               
@@ -384,8 +384,8 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
                   }}
                   className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 transition-all cursor-pointer ${
                     activeTab === "login"
-                      ? "bg-white text-slate-900 font-normal shadow-xs"
-                      : "text-slate-500 hover:text-slate-900"
+                      ? "bg-white text-slate-900 font-bold shadow-xs"
+                      : "text-slate-600 font-semibold hover:text-slate-900"
                   }`}
                 >
                   <KeyRound className="h-3.5 w-3.5 text-slate-600" />
@@ -400,8 +400,8 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
                   }}
                   className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 transition-all cursor-pointer ${
                     activeTab === "demo"
-                      ? "bg-white text-slate-900 font-normal shadow-xs"
-                      : "text-slate-500 hover:text-slate-900"
+                      ? "bg-white text-slate-900 font-bold shadow-xs"
+                      : "text-slate-600 font-semibold hover:text-slate-900"
                   }`}
                 >
                   <Zap className="h-3.5 w-3.5 text-amber-500" />
@@ -416,8 +416,8 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
                   }}
                   className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 transition-all cursor-pointer ${
                     activeTab === "signup"
-                      ? "bg-white text-slate-900 font-normal shadow-xs"
-                      : "text-slate-500 hover:text-slate-900"
+                      ? "bg-white text-slate-900 font-bold shadow-xs"
+                      : "text-slate-600 font-semibold hover:text-slate-900"
                   }`}
                 >
                   <UserPlus className="h-3.5 w-3.5 text-emerald-600" />
@@ -444,10 +444,10 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
             {activeTab === "login" && (
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-xl font-normal text-slate-900 tracking-tight">
+                  <h3 className="text-2xl font-bold text-slate-900 tracking-tight">
                     Portal Authentication
                   </h3>
-                  <p className="text-xs font-light text-slate-400 mt-0.5">
+                  <p className="text-sm font-medium text-slate-500 mt-1">
                     Select your regulatory role from the dropdown, verify your username, and enter your password.
                   </p>
                 </div>
@@ -462,34 +462,34 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
                 >
                   {/* Role Dropdown */}
                   <div>
-                    <label className="block text-xs font-light text-slate-600 mb-1.5">
+                    <label className="block text-sm font-bold text-slate-900 mb-1.5">
                       Select Regulatory / Institutional Role
                     </label>
                     <div className="relative">
-                      <div className="absolute left-3.5 top-3 text-slate-500 pointer-events-none">
+                      <div className="absolute left-3.5 top-3.5 text-slate-600 pointer-events-none">
                         <SelectedRoleIcon className="h-4 w-4" />
                       </div>
                       <select
                         value={selectedRole.id}
                         onChange={(e) => handleRoleChange(e.target.value)}
-                        className="w-full appearance-none rounded-full border border-slate-200/80 bg-slate-50/70 pl-10 pr-10 py-2.5 text-xs text-slate-800 font-light outline-none focus:border-slate-400 focus:bg-white transition-all cursor-pointer"
+                        className="w-full appearance-none rounded-full border border-slate-300 bg-white pl-10 pr-10 py-3 text-sm text-slate-900 font-semibold outline-none focus:border-slate-500 shadow-2xs transition-all cursor-pointer"
                       >
                         {ROLES.map((r) => (
-                          <option key={r.id} value={r.id} className="py-1">
+                          <option key={r.id} value={r.id} className="py-1 font-medium">
                             {r.label}
                           </option>
                         ))}
                       </select>
-                      <ChevronDown className="absolute right-3.5 top-3 h-4 w-4 text-slate-400 pointer-events-none" />
+                      <ChevronDown className="absolute right-3.5 top-3.5 h-4 w-4 text-slate-500 pointer-events-none" />
                     </div>
 
                     {/* Role Clearance Pill */}
-                    <div className="mt-1.5 flex items-center justify-between px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/60 text-[11px] font-light text-slate-600">
+                    <div className="mt-1.5 flex items-center justify-between px-3.5 py-1.5 rounded-xl bg-slate-100/80 border border-slate-200 text-xs font-medium text-slate-700">
                       <div className="flex items-center gap-1.5 truncate">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0"></span>
+                        <span className="h-2 w-2 rounded-full bg-emerald-500 shrink-0"></span>
                         <span className="truncate">{selectedRole.clearance}</span>
                       </div>
-                      <span className="text-[10px] font-mono text-slate-400 shrink-0 ml-2">
+                      <span className="text-[11px] font-mono font-bold text-slate-600 shrink-0 ml-2">
                         {selectedRole.badge}
                       </span>
                     </div>
@@ -497,46 +497,46 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
 
                   {/* Username Field */}
                   <div>
-                    <label className="block text-xs font-light text-slate-600 mb-1">
+                    <label className="block text-sm font-bold text-slate-900 mb-1.5">
                       Username / Officer ID
                     </label>
                     <div className="relative">
-                      <User className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                      <User className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-500" />
                       <input
                         type="text"
                         required
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         placeholder="e.g. admin, scrutiny, or institution1"
-                        className="w-full rounded-full border border-slate-200/80 bg-slate-50/70 pl-10 pr-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 outline-none focus:border-slate-400 focus:bg-white transition-all font-light"
+                        className="w-full rounded-full border border-slate-300 bg-white pl-10 pr-4 py-3 text-sm text-slate-900 font-semibold placeholder-slate-400 outline-none focus:border-slate-500 shadow-2xs transition-all"
                       />
                     </div>
                   </div>
 
                   {/* Password Field (Strictly Gated) */}
                   <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <label className="block text-xs font-light text-slate-600">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="block text-sm font-bold text-slate-900">
                         Password
                       </label>
-                      <span className="text-[10px] font-light text-slate-400">
+                      <span className="text-xs font-semibold text-slate-500">
                         Salted PBKDF2 / SHA-256
                       </span>
                     </div>
                     <div className="relative">
-                      <Lock className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                      <Lock className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-500" />
                       <input
                         type={showPassword ? "text" : "password"}
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter password (e.g. Password@123)"
-                        className="w-full rounded-full border border-slate-200/80 bg-slate-50/70 pl-10 pr-10 py-2.5 text-xs text-slate-800 placeholder-slate-400 outline-none focus:border-slate-400 focus:bg-white transition-all font-light"
+                        className="w-full rounded-full border border-slate-300 bg-white pl-10 pr-10 py-3 text-sm text-slate-900 font-semibold placeholder-slate-400 outline-none focus:border-slate-500 shadow-2xs transition-all"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3.5 top-2.5 text-slate-400 hover:text-slate-600 p-0.5 rounded cursor-pointer"
+                        className="absolute right-3.5 top-3 text-slate-500 hover:text-slate-800 p-0.5 rounded cursor-pointer"
                         title={showPassword ? "Hide password" : "Show password"}
                       >
                         {showPassword ? (
@@ -548,15 +548,15 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
                     </div>
 
                     {/* Password status micro-hint */}
-                    <div className="mt-1 px-1">
+                    <div className="mt-1.5 px-1">
                       {!isPasswordEntered ? (
-                        <div className="flex items-center gap-1.5 text-[11px] text-amber-600 font-light">
-                          <Lock className="h-3 w-3 shrink-0" />
+                        <div className="flex items-center gap-1.5 text-xs text-amber-700 font-semibold">
+                          <Lock className="h-3.5 w-3.5 shrink-0 text-amber-600" />
                           <span>Password required to unlock authentication button.</span>
                         </div>
                       ) : (
-                        <div className="flex items-center gap-1.5 text-[11px] text-emerald-600 font-light">
-                          <CheckCircle2 className="h-3 w-3 shrink-0" />
+                        <div className="flex items-center gap-1.5 text-xs text-emerald-700 font-semibold">
+                          <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
                           <span>Password entered. Press button or Enter to negotiate cipher handshake.</span>
                         </div>
                       )}
@@ -568,7 +568,7 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
                     <button
                       type="submit"
                       disabled={isSubmitDisabled}
-                      className={`w-full flex items-center justify-center space-x-2 rounded-full py-3 text-xs font-normal transition-all shadow-md ${
+                      className={`w-full flex items-center justify-center space-x-2 rounded-full py-3.5 text-sm font-bold transition-all shadow-md ${
                         isSubmitDisabled
                           ? "bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed shadow-none"
                           : "bg-slate-900 text-white hover:bg-slate-800 cursor-pointer hover:shadow-lg active:scale-[0.99]"
@@ -595,10 +595,10 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
                     <div className="flex items-center gap-2 overflow-hidden">
                       <Zap className="h-4 w-4 text-amber-600 shrink-0" />
                       <div className="truncate">
-                        <p className="text-xs font-normal text-slate-800 truncate">
+                        <p className="text-sm font-bold text-slate-900 truncate">
                           Quick Demo Evaluation
                         </p>
-                        <p className="text-[10px] font-light text-slate-500 truncate">
+                        <p className="text-xs font-medium text-slate-500 truncate">
                           Click to enter as AICTE Bureau Head without typing credentials
                         </p>
                       </div>
@@ -607,7 +607,7 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
                     <button
                       type="button"
                       onClick={() => handleSignIn("admin", "Password@123")}
-                      className="shrink-0 px-3.5 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-normal flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+                      className="shrink-0 px-4 py-2 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
                     >
                       <span>Bureau Head Demo</span>
                       <ArrowRight className="h-3 w-3" />
@@ -623,11 +623,11 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
                 <div>
                   <div className="flex items-center gap-1.5">
                     <Zap className="h-4 w-4 text-amber-500" />
-                    <h3 className="text-xl font-normal text-slate-900 tracking-tight">
+                    <h3 className="text-2xl font-bold text-slate-900 tracking-tight">
                       Instant Evaluator Sandbox
                     </h3>
                   </div>
-                  <p className="text-xs font-light text-slate-400 mt-0.5">
+                  <p className="text-sm font-medium text-slate-500 mt-1">
                     Click any role below to authenticate directly into AetherVault — no typing or password required.
                   </p>
                 </div>
@@ -647,7 +647,7 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
                           </div>
                           <div className="truncate">
                             <div className="flex items-center gap-2">
-                              <p className="text-xs font-normal text-slate-900 truncate">
+                              <p className="text-sm font-bold text-slate-900 truncate">
                                 {r.title}
                               </p>
                               <span className="text-[10px] font-light px-2 py-0.5 rounded-full bg-slate-200/70 text-slate-700">
@@ -685,10 +685,10 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
             {activeTab === "signup" && (
               <div className="space-y-3.5">
                 <div>
-                  <h3 className="text-xl font-normal text-slate-900 tracking-tight">
+                  <h3 className="text-2xl font-bold text-slate-900 tracking-tight">
                     Technical College Registration
                   </h3>
-                  <p className="text-xs font-light text-slate-400 mt-0.5">
+                  <p className="text-sm font-medium text-slate-500 mt-1">
                     Self-enrollment is permitted only for AICTE Technical Institution Nodal Officers & Principals
                   </p>
                 </div>
@@ -696,7 +696,7 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
                 <form onSubmit={handleSignUp} className="space-y-3">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-xs font-light text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-900 mb-1">
                         AICTE Permanent Institute ID
                       </label>
                       <input
@@ -709,7 +709,7 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-light text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-900 mb-1">
                         College / Institution Name
                       </label>
                       <input
@@ -725,7 +725,7 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-xs font-light text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-900 mb-1">
                         Nodal Officer Name
                       </label>
                       <input
@@ -738,7 +738,7 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-light text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-900 mb-1">
                         Institutional Email (.edu.in / .ac.in)
                       </label>
                       <input
@@ -753,7 +753,7 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-light text-slate-600 mb-1">
+                    <label className="block text-xs font-bold text-slate-900 mb-1">
                       Desired Username (Optional — default is email prefix)
                     </label>
                     <input
@@ -767,7 +767,7 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-xs font-light text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-900 mb-1">
                         Vault Access Password
                       </label>
                       <div className="relative">
@@ -789,7 +789,7 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs font-light text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-900 mb-1">
                         Confirm Password
                       </label>
                       <input

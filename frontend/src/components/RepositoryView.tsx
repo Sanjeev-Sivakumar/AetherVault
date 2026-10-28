@@ -142,7 +142,7 @@ export default function RepositoryView({
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-xl font-normal text-slate-900 tracking-tight">
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
             FDR Repository
           </h2>
           <p className="text-xs font-light text-slate-400 mt-0.5">
@@ -173,7 +173,7 @@ export default function RepositoryView({
         {/* Bank Capital Distribution Bar Chart */}
         <div className="rounded-[32px] border border-slate-100 bg-white p-5 shadow-sm">
           <div className="mb-3">
-            <h3 className="text-xs font-semibold text-slate-900">
+            <h3 className="text-sm font-bold text-slate-900">
               Bank Allocation (₹ Crores)
             </h3>
             <p className="text-[11px] font-light text-slate-400">
@@ -210,7 +210,7 @@ export default function RepositoryView({
         {/* Lifecycle Status Horizon */}
         <div className="rounded-[32px] border border-slate-100 bg-white p-5 shadow-sm">
           <div className="mb-3">
-            <h3 className="text-xs font-semibold text-slate-900">
+            <h3 className="text-sm font-bold text-slate-900">
               Lifecycle Distribution
             </h3>
             <p className="text-[11px] font-light text-slate-400">
@@ -322,7 +322,7 @@ export default function RepositoryView({
       <div className="overflow-hidden rounded-[26px] bg-white border border-slate-100 shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="border-b border-slate-100 bg-[#fbfcfd] font-bold text-slate-400 text-[11px] uppercase tracking-wider">
+            <thead className="border-b border-slate-100 bg-[#fbfcfd] font-bold text-slate-700 text-xs uppercase tracking-wider">
               <tr>
                 <th className="py-3.5 px-4">Instrument / FDR #</th>
                 <th className="py-3.5 px-4">Issuing Bank & Branch</th>

@@ -46,8 +46,8 @@ export default function RenewalModal({ fdr, onClose, onSuccess }: RenewalModalPr
       <div className="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl overflow-hidden">
         <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-6 py-4">
           <div>
-            <h2 className="text-base font-bold text-slate-900">Renew Instrument</h2>
-            <p className="text-xs text-slate-500">Replaces #{fdr.fdr_number}</p>
+            <h2 className="text-xl font-bold text-slate-900">Renew Instrument</h2>
+            <p className="text-xs font-semibold text-slate-500">Replaces #{fdr.fdr_number}</p>
           </div>
           <button onClick={onClose} className="rounded-full px-3 py-1.5 text-xs font-semibold text-slate-500 hover:bg-slate-200 transition-colors cursor-pointer">
             Close
@@ -56,7 +56,7 @@ export default function RenewalModal({ fdr, onClose, onSuccess }: RenewalModalPr
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs">
           <div>
-            <label className="font-semibold text-slate-700 block mb-1">New FDR Instrument Reference</label>
+            <label className="font-bold text-slate-800 text-xs block mb-1">New FDR Instrument Reference</label>
             <input
               type="text"
               required
@@ -68,7 +68,7 @@ export default function RenewalModal({ fdr, onClose, onSuccess }: RenewalModalPr
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">Principal Amount (INR)</label>
+              <label className="font-bold text-slate-800 text-xs block mb-1">Principal Amount (INR)</label>
               <input
                 type="number"
                 required
@@ -78,7 +78,7 @@ export default function RenewalModal({ fdr, onClose, onSuccess }: RenewalModalPr
               />
             </div>
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">Maturity Amount (INR)</label>
+              <label className="font-bold text-slate-800 text-xs block mb-1">Maturity Amount (INR)</label>
               <input
                 type="number"
                 required
@@ -91,7 +91,7 @@ export default function RenewalModal({ fdr, onClose, onSuccess }: RenewalModalPr
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">New Issue Date</label>
+              <label className="font-bold text-slate-800 text-xs block mb-1">New Issue Date</label>
               <input
                 type="date"
                 required
@@ -101,7 +101,7 @@ export default function RenewalModal({ fdr, onClose, onSuccess }: RenewalModalPr
               />
             </div>
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">New Maturity Date (10-Yr)</label>
+              <label className="font-bold text-slate-800 text-xs block mb-1">New Maturity Date (10-Yr)</label>
               <input
                 type="date"
                 required

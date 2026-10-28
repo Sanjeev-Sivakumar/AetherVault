@@ -56,10 +56,10 @@ export default function ScrutinyView({
   return (
     <div className="p-6 space-y-4">
       <div>
-        <h1 className="text-lg font-bold text-slate-900 tracking-tight">
+        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
           Scrutiny & Verification
         </h1>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs font-medium text-slate-500">
           {scrutinyList.length} Pending Records
         </p>
       </div>
@@ -67,7 +67,7 @@ export default function ScrutinyView({
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="border-b border-slate-200 bg-slate-50 font-semibold text-slate-600 text-[11px]">
+            <thead className="border-b border-slate-200 bg-slate-50 font-bold text-slate-700 text-xs uppercase tracking-wider">
               <tr>
                 <th className="py-2.5 px-3">FDR Instrument</th>
                 <th className="py-2.5 px-3">Bank & Branch</th>

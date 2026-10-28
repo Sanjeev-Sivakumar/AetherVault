@@ -221,10 +221,10 @@ export default function RegisterFDRModal({
         {/* Modal Top Header */}
         <div className="flex items-center justify-between border-b border-slate-100 bg-[#f8fafc] px-6 py-4">
           <div>
-            <h2 className="text-base font-bold text-slate-900 tracking-tight">
+            <h2 className="text-xl font-bold text-slate-900 tracking-tight">
               Register Deposit
             </h2>
-            <p className="text-xs font-normal text-slate-500">
+            <p className="text-xs font-semibold text-slate-500">
               FDR Lodgement
             </p>
           </div>
@@ -273,7 +273,7 @@ export default function RegisterFDRModal({
                   DOC
                 </div>
                 <div>
-                  <span className="text-xs font-medium text-slate-800 block">
+                  <span className="text-sm font-bold text-slate-900 block">
                     Upload Physical Deposit Receipt (PDF, PNG, JPG)
                   </span>
                   <span className="text-[11px] font-normal text-slate-500">
@@ -316,7 +316,7 @@ export default function RegisterFDRModal({
                     <span className="inline-block rounded-full bg-rose-600 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-white uppercase">
                       Document Flagged & Rejected
                     </span>
-                    <span className="text-xs font-semibold text-rose-950">
+                    <span className="text-sm font-bold text-rose-950">
                       Irrelevant Document Detected
                     </span>
                   </div>
@@ -379,7 +379,7 @@ export default function RegisterFDRModal({
           {/* SECTION 2: AUTO-EXTRACTED FORM PARAMETERS */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-800">
+              <span className="text-sm font-bold text-slate-900">
                 Instrument Specifications & Legal Title
               </span>
               {extractedMeta && !rejectionInfo && (
@@ -393,7 +393,7 @@ export default function RegisterFDRModal({
               
               {/* Institution */}
               <div>
-                <label className="font-normal text-slate-500 block mb-1">
+                <label className="font-bold text-slate-800 text-xs block mb-1">
                   Technical Institution
                 </label>
                 <select
@@ -412,7 +412,7 @@ export default function RegisterFDRModal({
               {/* FDR Number */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="font-normal text-slate-500">
+                  <label className="font-bold text-slate-800 text-xs">
                     FDR Reference Number
                   </label>
                   {fdrNumber && !rejectionInfo && (
@@ -434,7 +434,7 @@ export default function RegisterFDRModal({
               {/* Bank Name */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="font-normal text-slate-500">
+                  <label className="font-bold text-slate-800 text-xs">
                     Issuing Scheduled Bank
                   </label>
                   {bankName && !rejectionInfo && (
@@ -456,7 +456,7 @@ export default function RegisterFDRModal({
               {/* Branch Name */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="font-normal text-slate-500">
+                  <label className="font-bold text-slate-800 text-xs">
                     Issuing Bank Branch
                   </label>
                   {branchName && !rejectionInfo && (
@@ -478,7 +478,7 @@ export default function RegisterFDRModal({
               {/* IFSC Code */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="font-normal text-slate-500">
+                  <label className="font-bold text-slate-800 text-xs">
                     Bank IFSC Code
                   </label>
                   {ifscCode && !rejectionInfo && (
@@ -500,7 +500,7 @@ export default function RegisterFDRModal({
               {/* Deposit Account Number */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="font-normal text-slate-500">
+                  <label className="font-bold text-slate-800 text-xs">
                     Fixed Deposit Account No.
                   </label>
                   {accountNumber && !rejectionInfo && (
@@ -522,7 +522,7 @@ export default function RegisterFDRModal({
               {/* Principal Amount */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="font-normal text-slate-500">
+                  <label className="font-bold text-slate-800 text-xs">
                     Principal Amount (INR)
                   </label>
                   {principalAmount && !rejectionInfo && (
@@ -544,7 +544,7 @@ export default function RegisterFDRModal({
               {/* Interest Rate */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="font-normal text-slate-500">
+                  <label className="font-bold text-slate-800 text-xs">
                     Interest Rate (% p.a.)
                   </label>
                   {interestRate && !rejectionInfo && (
@@ -567,7 +567,7 @@ export default function RegisterFDRModal({
               {/* Maturity Amount */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="font-normal text-slate-500">
+                  <label className="font-bold text-slate-800 text-xs">
                     Maturity Amount (INR)
                   </label>
                   {maturityAmount && !rejectionInfo && (
@@ -589,7 +589,7 @@ export default function RegisterFDRModal({
               {/* Issue Date */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="font-normal text-slate-500">
+                  <label className="font-bold text-slate-800 text-xs">
                     Issue Date
                   </label>
                   {issueDate && !rejectionInfo && (
@@ -610,7 +610,7 @@ export default function RegisterFDRModal({
               {/* Maturity Date */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="font-normal text-slate-500">
+                  <label className="font-bold text-slate-800 text-xs">
                     Maturity Date (10-Yr Regulatory Lock-in)
                   </label>
                   {maturityDate && !rejectionInfo && (
@@ -632,7 +632,7 @@ export default function RegisterFDRModal({
             {/* Joint Account Title */}
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="font-normal text-slate-500">
+                <label className="font-bold text-slate-800 text-xs">
                   Joint Account Title / Statutory Lien Holding Title
                 </label>
                 {jointTitle && !rejectionInfo && (

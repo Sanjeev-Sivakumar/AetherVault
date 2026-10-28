@@ -235,7 +235,7 @@ export default function DashboardView({
           {/* 1. HERO CARD */}
           <div className="rounded-[28px] bg-[#111217] p-7 text-white shadow-xl shadow-slate-900/10 relative overflow-hidden">
             <div className="flex items-center justify-between relative z-10">
-              <span className="text-xs font-semibold text-slate-400 tracking-wide">
+              <span className="text-sm font-bold text-slate-300 tracking-wide">
                 Collateral Reserve
               </span>
 
@@ -277,7 +277,7 @@ export default function DashboardView({
           {/* 2. SUMMARY METRIC CARDS */}
           <div>
             <div className="flex items-center justify-between mb-3.5 px-1">
-              <h3 className="text-base font-extrabold text-slate-900 tracking-tight">
+              <h3 className="text-xl font-bold text-slate-900 tracking-tight">
                 Financial Summary
               </h3>
             </div>
@@ -289,7 +289,7 @@ export default function DashboardView({
                 className="rounded-2xl bg-[#eafaf1] p-5 border border-emerald-100/50 shadow-xs flex flex-col justify-between hover:shadow-md transition-all cursor-pointer group"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-emerald-900/80">Active Liens</span>
+                  <span className="text-sm font-extrabold text-emerald-950">Active Liens</span>
                 </div>
 
                 <div className="flex items-baseline justify-between mt-4">
@@ -308,7 +308,7 @@ export default function DashboardView({
                 className="rounded-2xl bg-[#fef2eb] p-5 border border-orange-100/50 shadow-xs flex flex-col justify-between hover:shadow-md transition-all cursor-pointer group"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-orange-950/80">Expiring & Matured</span>
+                  <span className="text-sm font-extrabold text-orange-950">Expiring & Matured</span>
                 </div>
 
                 <div className="flex items-baseline justify-between mt-4">
@@ -327,7 +327,7 @@ export default function DashboardView({
                 className="rounded-2xl bg-[#eef5fc] p-5 border border-blue-100/50 shadow-xs flex flex-col justify-between hover:shadow-md transition-all cursor-pointer group"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-blue-950/80">Under Scrutiny</span>
+                  <span className="text-sm font-extrabold text-blue-950">Under Scrutiny</span>
                 </div>
 
                 <div className="flex items-baseline justify-between mt-4">
@@ -346,7 +346,7 @@ export default function DashboardView({
           <div className="rounded-[28px] bg-white p-6 border border-slate-100 shadow-xs">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-base font-extrabold text-slate-900 tracking-tight">
+                <h3 className="text-xl font-bold text-slate-900 tracking-tight">
                   Predictive Liquidity Flow
                 </h3>
                 <p className="text-xs font-medium text-slate-400">
@@ -447,7 +447,7 @@ export default function DashboardView({
             {/* Quick Actions */}
             <div className="rounded-2xl bg-white p-5 border border-slate-100 shadow-xs flex flex-col justify-between">
               <div className="flex items-center justify-between mb-3">
-                <h4 className="text-xs font-bold text-slate-900 tracking-tight">
+                <h4 className="text-base font-bold text-slate-900 tracking-tight">
                   Quick Protocols
                 </h4>
               </div>
@@ -493,7 +493,7 @@ export default function DashboardView({
             {/* Smart Escrow Status */}
             <div className="rounded-2xl bg-white p-5 border border-slate-100 shadow-xs flex flex-col justify-between">
               <div className="flex items-center justify-between mb-2">
-                <h4 className="text-xs font-bold text-slate-900 tracking-tight">
+                <h4 className="text-base font-bold text-slate-900 tracking-tight">
                   System Health
                 </h4>
                 <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
@@ -524,7 +524,7 @@ export default function DashboardView({
           {/* 1. SURVEILLANCE ACTIVITY FEED */}
           <div className="rounded-[28px] bg-white p-6 border border-slate-100 shadow-xs">
             <div className="flex items-center justify-between mb-4 pb-2 border-b border-slate-100/80">
-              <h3 className="text-base font-extrabold text-slate-900 tracking-tight">
+              <h3 className="text-xl font-bold text-slate-900 tracking-tight">
                 Audits & Activity
               </h3>
             </div>
@@ -534,7 +534,7 @@ export default function DashboardView({
               {recentTransactions.map((tx) => (
                 <div key={tx.id} className="flex items-center justify-between group">
                   <div className="min-w-0">
-                    <p className="text-xs font-bold text-slate-900 truncate">{tx.title}</p>
+                    <p className="text-sm font-bold text-slate-900 truncate">{tx.title}</p>
                     <p className="text-[10px] font-medium text-slate-400">{tx.date} • {tx.bank}</p>
                   </div>
                   <span className="text-xs font-black text-slate-900 font-mono shrink-0 pl-2">
@@ -548,7 +548,7 @@ export default function DashboardView({
           {/* 2. ACTIVE REGULATED LIEN CARDS (Reference: "Available Card" VISA & AMEX) */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
-              <h3 className="text-base font-extrabold text-slate-900 tracking-tight">
+              <h3 className="text-xl font-bold text-slate-900 tracking-tight">
                 Regulated Instruments
               </h3>
               <button
