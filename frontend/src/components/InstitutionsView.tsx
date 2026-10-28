@@ -50,8 +50,18 @@ export default function InstitutionsView({ institutions }: InstitutionsViewProps
     stateMap[st] = (stateMap[st] || 0) + 1;
   });
 
-  const categoryChartData = Object.entries(categoryMap).map(([name, count]) => ({
-    name: name.replace("Engineering & Technology", "Engg & AI").replace("Management", "MBA / PGDM"),
+  const shortenCategory = (cat: string) => {
+    if (cat.includes("Engineering") && cat.includes("Technology")) return "Engg & AI";
+    if (cat.includes("Management")) return "MBA & Engg";
+    if (cat.includes("Pharmacy")) return "Pharmacy";
+    if (cat.includes("Polytechnic") || cat.includes("Diploma")) return "Polytechnic";
+    if (cat.includes("Architecture")) return "Architecture";
+    return cat.length > 12 ? cat.slice(0, 10) + "…" : cat;
+  };
+
+  const categoryChartData = Object.entries(categoryMap).map(([fullName, count]) => ({
+    fullName,
+    name: shortenCategory(fullName),
     count
   }));
 
@@ -101,16 +111,21 @@ export default function InstitutionsView({ institutions }: InstitutionsViewProps
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={categoryChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 11 }} />
+                <XAxis dataKey="name" interval={0} axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 11 }} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 11 }} />
                 <Tooltip
+                  cursor={{ fill: "rgba(241, 245, 249, 0.7)" }}
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
                       const d = payload[0].payload;
                       return (
-                        <div className="rounded-2xl bg-slate-900 text-white p-2.5 shadow-xl text-xs font-light">
-                          <p className="font-normal">{d.name}</p>
-                          <p className="text-emerald-400 font-mono mt-0.5">Institutions: {d.count}</p>
+                        <div className="rounded-xl border border-slate-200/90 bg-white px-3.5 py-2.5 shadow-md text-xs font-normal">
+                          <p className="text-[11px] font-medium text-slate-500 mb-1">{d.fullName || d.name}</p>
+                          <div className="flex items-center space-x-2">
+                            <span className="h-2.5 w-2.5 rounded-full bg-blue-500"></span>
+                            <span className="text-xs text-slate-700">Institutions:</span>
+                            <span className="font-mono text-xs font-semibold text-slate-900">{d.count}</span>
+                          </div>
                         </div>
                       );
                     }
@@ -141,16 +156,21 @@ export default function InstitutionsView({ institutions }: InstitutionsViewProps
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={stateChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 11 }} />
+                <XAxis dataKey="name" interval={0} axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 11 }} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 11 }} />
                 <Tooltip
+                  cursor={{ fill: "rgba(241, 245, 249, 0.7)" }}
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
                       const d = payload[0].payload;
                       return (
-                        <div className="rounded-2xl bg-slate-900 text-white p-2.5 shadow-xl text-xs font-light">
-                          <p className="font-normal">{d.name}</p>
-                          <p className="text-purple-300 font-mono mt-0.5">Campuses: {d.count}</p>
+                        <div className="rounded-xl border border-slate-200/90 bg-white px-3.5 py-2.5 shadow-md text-xs font-normal">
+                          <p className="text-[11px] font-medium text-slate-500 mb-1">{d.name}</p>
+                          <div className="flex items-center space-x-2">
+                            <span className="h-2.5 w-2.5 rounded-full bg-purple-500"></span>
+                            <span className="text-xs text-slate-700">Campuses:</span>
+                            <span className="font-mono text-xs font-semibold text-slate-900">{d.count}</span>
+                          </div>
                         </div>
                       );
                     }
