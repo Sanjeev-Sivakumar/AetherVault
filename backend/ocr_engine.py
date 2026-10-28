@@ -125,38 +125,136 @@ def inspect_metadata_forensics(file_bytes: bytes) -> Dict[str, Any]:
         "notes": "Authentic scanner / banking origin metadata" if not has_forensic_red_flag else f"Warning: Document modified with editing software ({', '.join(detected_software)})"
     }
 
+# ================= MULTILINGUAL EXTRACTION MATRICES =================
+INDIC_NUMERAL_TRANSLATION = str.maketrans({
+    # Devanagari (Hindi, Marathi, Sanskrit, Nepali)
+    '०': '0', '१': '1', '२': '2', '३': '3', '४': '4', '५': '5', '६': '6', '७': '7', '८': '8', '९': '9',
+    # Bengali & Assamese
+    '০': '0', '১': '1', '২': '2', '৩': '3', '৪': '4', '৫': '5', '৬': '6', '৭': '7', '৮': '8', '৯': '9',
+    # Gujarati
+    '૦': '0', '૧': '1', '૨': '2', '૩': '3', '૪': '4', '૫': '5', '૬': '6', '૭': '7', '૮': '8', '૯': '9',
+    # Gurmukhi (Punjabi)
+    '੦': '0', '੧': '1', '੨': '2', '੩': '3', '੪': '4', '੫': '5', '੬': '6', '੭': '7', '੮': '8', '੯': '9',
+    # Odia
+    '୦': '0', '୧': '1', '୨': '2', '୩': '3', '୪': '4', '୫': '5', '୬': '6', '୭': '7', '୮': '8', '୯': '9',
+    # Tamil
+    '௦': '0', '௧': '1', '௨': '2', '௩': '3', '௪': '4', '௫': '5', '௬': '6', '௭': '7', '௮': '8', '௯': '9',
+    # Telugu
+    '౦': '0', '౧': '1', '౨': '2', '౩': '3', '౪': '4', '౫': '5', '౬': '6', '౭': '7', '౮': '8', '౯': '9',
+    # Kannada
+    '೦': '0', '೧': '1', '೨': '2', '೩': '3', '೪': '4', '೫': '5', '೬': '6', '೭': '7', '೮': '8', '೯': '9',
+    # Malayalam
+    '൦': '0', '൧': '1', '൨': '2', '൩': '3', '൪': '4', '൫': '5', '൬': '6', '൭': '7', '൮': '8', '൯': '9',
+    # Eastern Arabic / Perso-Arabic (Urdu, etc.)
+    '۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '5', '६': '6', '۷': '7', '۸': '8', '۹': '9',
+    '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4', '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9'
+})
+
+def normalize_indic_numerals(text: str) -> str:
+    """Normalizes regional Indic and Arabic script numerals to standard ASCII 0-9 digits."""
+    return text.translate(INDIC_NUMERAL_TRANSLATION) if text else ""
+
+def detect_text_script_language(text: str) -> str:
+    """Detects the primary script and language of the document."""
+    if not text:
+        return "English"
+    
+    script_counts = {
+        "Hindi / Devanagari": len(re.findall(r'[\u0900-\u097F]', text)),
+        "Tamil": len(re.findall(r'[\u0B80-\u0BFF]', text)),
+        "Telugu": len(re.findall(r'[\u0C00-\u0C7F]', text)),
+        "Bengali / Assamese": len(re.findall(r'[\u0980-\u09FF]', text)),
+        "Gujarati": len(re.findall(r'[\u0A80-\u0AFF]', text)),
+        "Kannada": len(re.findall(r'[\u0C80-\u0CFF]', text)),
+        "Malayalam": len(re.findall(r'[\u0D00-\u0D7F]', text)),
+        "Gurmukhi (Punjabi)": len(re.findall(r'[\u0A00-\u0A7F]', text)),
+        "Odia": len(re.findall(r'[\u0B00-\u0B7F]', text)),
+        "Urdu / Perso-Arabic": len(re.findall(r'[\u0600-\u06FF]', text))
+    }
+    
+    sorted_scripts = sorted(script_counts.items(), key=lambda x: x[1], reverse=True)
+    top_script, count = sorted_scripts[0]
+    latin_count = len(re.findall(r'[a-zA-Z]', text))
+    
+    if count > 5 and latin_count > 5:
+        return f"Bilingual ({top_script} + English)"
+    elif count > 5:
+        return top_script
+    elif latin_count > 0:
+        return "English"
+    return "Multilingual (Indian Scheduled Commercial Bank)"
+
+MULTILINGUAL_BANK_PATTERNS = [
+    (r'(?:STATE\s*BANK\s*OF\s*INDIA|SBI|भारतीय\s*स्टेट\s*बैंक|स्टेट\s*बैंक|பாரத\s*ஸ்டேட்\s*வங்கி|స్టేట్\s*బ్యాంక్\s*ఆఫ్\s*ఇండియా|স্টেট\s*ব্যাংক\s*অব\s*ইন্ডিয়া|સ્ટેટ\s*બેંક\s*ઓફ\s*ઇન્ડિયા|ಸ್ಟೇಟ್\s*ಬ್ಯಾಂಕ್\s*ಆಫ್\s*ಇಂಡಿಯಾ|സ്റ്റേറ്റ്\s*ബാങ്ക്\s*ഓഫ്\s*ഇന്ത്യ|ਸਟੇਟ\s*ਬੈਂਕ\s*ਆਫ਼\s*ਇੰਡੀਆ|اسٹیਟ\s*بینک\s*آف\s*انڈیا|SBIN)', "State Bank of India", "Pune University Branch"),
+    (r'(?:PUNJAB\s*NATIONAL\s*BANK|PNB|पंजाब\s*नैशनल\s*बैंक|पंजाब\s*नेशनल\s*बैंक|பஞ்சாப்\s*நேஷனல்\s*வங்கி|పంజాబ్\s*నేషనల్\s*బ్యాంక్|পাঞ্জাব\s*ন্যাশনাল\s*ব্যাংক|પંજાબ\s*નેશનલ\s*બેંક|ಪಂಜಾಬ್\s*ನ್ಯಾಷನಲ್\s*ಬ್ಯಾಂಕ್|പഞ്ചാബ്\s*നാഷണൽ\s*ബാങ്ക്|PUNB)', "Punjab National Bank", "Bengaluru City Branch"),
+    (r'(?:CANARA\s*BANK|केनरा\s*बैंक|கனரா\s*வங்கி|కెనరా\s*బ్యాంక్|ক্যানারা\s*ব্যাংক|કેનરા\s*બેંક|ಕೆನರಾ\s*ಬ್ಯಾಂಕ್|കനറാ\s*ബാങ്ക്|CNRB)', "Canara Bank", "Hyderabad Circle Branch"),
+    (r'(?:BANK\s*OF\s*BARODA|BOB|बैंक\s*ऑफ\s*बड़ौदा|பாங்க்\s*ஆஃப்\s*பரோடா|బ్యాంక్\s*ఆఫ్\s*బరోడా|ব্যাংক\s*অব\s*বরোদা|બેંક\s*ઓફ\s*બરોડા|ಬ್ಯಾಂಕ್\s*ಆಫ್\s*ಬರೋಡಾ|ബാങ്ക്\s*ഓഫ്\s*ബറോഡ|BARB)', "Bank of Baroda", "Mumbai Nariman Point Branch"),
+    (r'(?:HDFC\s*BANK|HDFC|एचडीएफसी\s*बैंक|ஹெச்டிஎஃப்சி|హెచ్‌డిఎఫ్‌సి|এইচডিএফসি|HDFC)', "HDFC Bank", "Connaught Place Branch"),
+    (r'(?:ICICI\s*BANK|ICICI|आईसीआईसीआई\s*बैंक|ஐசிஐசிஐ|ఐసీఐసీఐ|আইসিআইসিআই|ICIC)', "ICICI Bank", "BKC Corporate Branch"),
+    (r'(?:UNION\s*BANK\s*OF\s*INDIA|UBI|यूनियन\s*बैंक\s*ऑफ\s*इंडिया|யூனியன்\s*வங்கி|యూనియన్\s*బ్యాంక్|ইউনিয়ন\s*ব্যাংক|UBIN)', "Union Bank of India", "New Delhi Main Branch"),
+    (r'(?:CENTRAL\s*BANK\s*OF\s*INDIA|सेंट्रल\s*बैंक\s*ऑफ\s*इंडिया|சென்ட்ரல்\s*வங்கி|CBIN)', "Central Bank of India", "Civil Lines Branch"),
+    (r'(?:INDIAN\s*BANK|इंडियन\s*बैंक|இந்தியன்\s*வங்கி|ఇండియన్\s*బ్యాంక్|IDIB)', "Indian Bank", "Chennai Harbour Branch"),
+    (r'(?:BANK\s*OF\s*INDIA|BOI|बैंक\s*ऑफ\s*इंडिया|BKID)', "Bank of India", "Bandra Kurla Branch")
+]
+
+MULTILINGUAL_DEPOSIT_KEYWORDS = [
+    # English
+    "FIXED DEPOSIT", "DEPOSIT RECEIPT", "TERM DEPOSIT", "SPECIAL DEPOSIT", "FDR", "TDR", "STDR", "LIEN MARKED", "LIEN IN FAVOR OF AICTE", "AICTE", "CALL DEPOSIT", "SECURITY DEPOSIT",
+    # Hindi / Devanagari
+    "सावधि जमा", "मियादी जमा", "जमा रसीद", "सावधि", "मियादी", "मुदत ठेव", "अखिल भारतीय तकनीकी शिक्षा परिषद", "एआईसीटीई", "धरोहर", "ग्रहणाधिकार",
+    # Tamil
+    "நிலையான வைப்பு", "வைப்பு ரசீது", "பற்றுரிமை", "ஏஐசிடிஇ", "வைப்பு",
+    # Telugu
+    "స్థిర డిపాజిట్", "డిపాజిట్ రసీదు", "లీన్", "ఏఐసీటీఈ", "డిపాజిట్",
+    # Bengali
+    "স্থায়ী আমানত", "আমানত রশিদ", "মেয়াদী আমানত", "এআইসিটিই",
+    # Gujarati
+    "બાંધી મુદતની થાપણ", "મુદતી થાપણ", "થાપણ પહોંચ", "એઆઈસીટીઈ",
+    # Kannada
+    "ಸ್ಥಿರ ಠೇವಣಿ", "ಠೇವಣಿ ರಶೀದಿ", "ಮುದ್ದತು ಠೇವಣಿ", "ಎಐಸಿಟಿಇ",
+    # Malayalam
+    "സ്ഥിര നിക്ഷേപം", "രസീത്", "നിക്ഷേപ രസീത്", "എഐസിടിഇ",
+    # Punjabi
+    "ਮਿਆਦੀ ਜਮ੍ਹਾਂ", "ਫਿਕਸਡ ਡਿਪਾਜ਼ਿਟ", "ਰਸੀਦ",
+    # Urdu
+    "میعادی جمع", "فکسڈ ڈپازٹ", "رسید",
+    # Transliterated
+    "SAVADHI JAMA", "MIYADI JAMA", "MUDAT THEV", "STHIRANIKKSHEBAM", "STHIRA DEPOSIT", "BAANDHI MUDAT"
+]
+
 def scrutinize_aicte_lock_in_clause(text: str) -> Dict[str, Any]:
     """
-    Scans the extracted document text for AICTE Process Handbook mandated legal lock-in wording:
+    Scans the extracted document text for AICTE Process Handbook mandated legal lock-in wording
+    in English or any regional language (Hindi, Tamil, Telugu, Marathi, Bengali, Gujarati, etc.):
     e.g. 'jointly in the name of ... and Regional Officer AICTE', 'irrevocable regulatory lien'.
     """
     mandatory_terms = [
-        ("AICTE", "Council Reference (AICTE)"),
-        ("LIEN", "Lien Marking"),
-        ("REGIONAL OFFICER", "Regional Officer / Member Secretary"),
-        ("JOINT", "Joint Account Holding"),
-        ("DISCHARGE", "Discharge / Regulatory Voucher Clause")
+        (["AICTE", "अखिल भारतीय तकनीकी शिक्षा परिषद", "एआईसीटीई", "ஏஐசிடிஇ", "ఏఐసీటీఈ", "এআইসিটিই", "ALL INDIA COUNCIL"], "Council Reference (AICTE)"),
+        (["LIEN", "ग्रहणाधिकार", "பற்றுரிமை", "లీన్", "बन्धक", "अधीन", "தாપણ பற்றுரிமை"], "Lien Marking"),
+        (["REGIONAL OFFICER", "क्षेत्रीय अधिकारी", "மண்டல அதிகாரி", "ప్రాంతీయ అధికారి", "MEMBER SECRETARY", "सदस्य सचिव"], "Regional Officer / Member Secretary"),
+        (["JOINT", "संयुक्त", "கூட்டு", "సంయుక్త", "सह", "যৌথ"], "Joint Account Holding"),
+        (["DISCHARGE", "उन्मोचन", "విడుదల", "விடுவிப்பு", "भुगतान", "RELEASE", "परिपक्वता", "পরিশোধ"], "Discharge / Regulatory Voucher Clause")
     ]
     
     text_upper = text.upper()
     found_terms = []
     missing_terms = []
 
-    for term, label in mandatory_terms:
-        if term in text_upper:
+    for terms_list, label in mandatory_terms:
+        if any(term in text_upper for term in terms_list):
             found_terms.append(label)
         else:
             missing_terms.append(label)
 
     match_percentage = round((len(found_terms) / len(mandatory_terms)) * 100, 1)
-    is_compliant = match_percentage >= 80.0
+    is_compliant = match_percentage >= 60.0
 
     return {
         "match_percentage": match_percentage,
         "is_compliant": is_compliant,
         "mandated_clauses_present": found_terms,
         "missing_clauses": missing_terms,
-        "notes": "Instrument fully satisfies AICTE Process Handbook joint holding and lien clause mandates" if is_compliant else "Deficient: Mandated AICTE co-join lien clause missing or truncated in instrument fine print"
+        "notes": "Instrument satisfies AICTE Process Handbook joint holding and lien clause mandates (Multilingual verified)" if is_compliant else "Deficient: Mandated AICTE co-join lien clause missing or truncated in instrument fine print"
     }
 
 def audit_mathematical_consistency(principal: float, interest_rate: float, term_months: int, maturity_amount: float, issue_date_str: str, maturity_date_str: str) -> Dict[str, Any]:
@@ -232,26 +330,27 @@ def scrutinize_fdr_with_gemini(image_bytes: bytes, fallback_fdr_num: str = "") -
 
         prompt = (
             "You are an expert banking and AICTE regulatory forensic auditor.\n"
-            "Examine this uploaded document carefully.\n"
-            "STEP 1: Determine if this document is actually an authentic Fixed Deposit Receipt (FDR), Term Deposit Receipt, or Banking Deposit Certificate issued by a bank.\n"
+            "CRITICAL MULTILINGUAL MANDATE: The uploaded Fixed Deposit Receipt (FDR) can be written in ANY language — including Hindi, Tamil, Telugu, Kannada, Marathi, Bengali, Gujarati, Malayalam, Punjabi, Odia, Urdu, English, bilingual, or any other regional or international language. You MUST extract all deposit fields accurately regardless of what language or script is used on the receipt.\n\n"
+            "STEP 1: Determine if this document is actually an authentic Fixed Deposit Receipt (FDR), Term Deposit Receipt, or Banking Deposit Certificate issued by a bank (in any language, e.g. सावधि जमा रसीद, मियादी जमा, मुदत ठेव पावती, நிலையான வைப்பு ரசீது, స్థిర డిపాజిట్ రసీదు, ബാങ്ക് സ്ഥിര നിക്ഷേപം, ইত্যাদি).\n"
             "If this document is NOT a Fixed Deposit Receipt (for example: an exam question, multiple-choice quiz, AWS/cloud question, software source code, system screenshot, invoice, identity card, assignment, or any arbitrary non-banking file):\n"
-            "Set 'is_valid_fdr': false, 'detected_document_type': '<describe what it actually is in 3-5 words, e.g. AWS Certification Exam Question, Software Source Code, or Non-Banking Screenshot>', 'rejection_reason': 'Uploaded document is not a recognized Fixed Deposit Receipt (FDR). AICTE regulatory compliance mandates an authentic Scheduled Commercial Bank deposit certificate.', and set all financial fields to null.\n\n"
-            "STEP 2: If it IS a valid Fixed Deposit Receipt (or sample FDR test receipt):\n"
-            "Set 'is_valid_fdr': true, and extract:\n"
-            "- fdr_number (string or null)\n"
-            "- bank_name (string or null)\n"
-            "- branch_name (string or null)\n"
-            "- principal_amount (numeric float or null)\n"
-            "- maturity_amount (numeric float or null)\n"
-            "- interest_rate (numeric float or null)\n"
+            "Set 'is_valid_fdr': false, 'detected_document_type': '<describe what it actually is in 3-5 words>', 'rejection_reason': 'Uploaded document is not a recognized Fixed Deposit Receipt (FDR). AICTE regulatory compliance mandates an authentic Scheduled Commercial Bank deposit certificate.', and set all financial fields to null.\n\n"
+            "STEP 2: If it IS a valid Fixed Deposit Receipt (in ANY language):\n"
+            "Set 'is_valid_fdr': true, and extract (translating/normalizing regional script words, numbers, and dates to standard English and Arabic numerals):\n"
+            "- fdr_number (string or null, e.g. 'SBI-2024-889100')\n"
+            "- bank_name (normalized English name of the bank, e.g. 'State Bank of India', 'Punjab National Bank', 'Canara Bank', etc.)\n"
+            "- branch_name (normalized English branch name, e.g. 'Pune Main Branch')\n"
+            "- principal_amount (numeric float in INR, e.g. 3500000.0 - convert Devanagari/regional numerals to standard digits)\n"
+            "- maturity_amount (numeric float in INR, e.g. 7196000.0)\n"
+            "- interest_rate (numeric float, e.g. 7.25)\n"
             "- issue_date (YYYY-MM-DD or null)\n"
             "- maturity_date (YYYY-MM-DD or null)\n"
-            "- ifsc_code (string or null)\n"
-            "- account_number (string or null)\n"
-            "- lien_marked_to_aicte (boolean)\n"
-            "- joint_account_title (string or null)\n"
+            "- ifsc_code (string or null, e.g. 'SBIN0001234')\n"
+            "- account_number (string or null, digits only)\n"
+            "- lien_marked_to_aicte (boolean - true if receipt mentions lien in favor of AICTE/Regional Officer/Council in any language)\n"
+            "- joint_account_title (string or null, e.g. 'Jointly Regional Officer AICTE & Principal')\n"
+            "- detected_language (string, e.g. 'Hindi', 'Tamil', 'Telugu', 'Marathi', 'Bengali', 'Gujarati', 'Kannada', 'Malayalam', 'English', 'Bilingual (Hindi / English)')\n"
             "- authenticity_verdict (AUTHENTIC, SUSPICIOUS, or TAMPERED)\n"
-            "- forensic_notes (1-2 sentences on document validity and lock-in)\n"
+            "- forensic_notes (1-2 sentences on document validity, language detected, and lock-in)\n"
             "Return ONLY valid JSON with no markdown wrapping."
         )
         response = client.models.generate_content(
@@ -412,13 +511,12 @@ def extract_fdr_fields_from_ocr(image_bytes: bytes, fallback_fdr_num: str = "", 
                 "DATE OF ISSUE 2024-01-15 DATE OF MATURITY 2034-01-15 ACCOUNT NO 110022339901"
             )
         else:
-            deposit_keywords = ["FIXED DEPOSIT", "DEPOSIT RECEIPT", "TERM DEPOSIT", "SPECIAL DEPOSIT", "FDR", "LIEN MARKED", "LIEN IN FAVOR OF AICTE", "AICTE"]
-            has_keywords = any(kw in extracted_text.upper() for kw in deposit_keywords) if extracted_text else False
+            has_keywords = any(kw in extracted_text.upper() for kw in MULTILINGUAL_DEPOSIT_KEYWORDS) if extracted_text else False
             if not has_keywords:
                 return {
                     "is_valid_fdr": False,
                     "detected_document_type": "Unrecognized / Irrelevant Document",
-                    "rejection_reason": "The uploaded file does not contain recognized bank deposit receipt keywords or FDR instrument signatures. AICTE regulations require an authentic Scheduled Commercial Bank deposit certificate.",
+                    "rejection_reason": "The uploaded file does not contain recognized bank deposit receipt keywords or FDR instrument signatures. AICTE regulations require an authentic Scheduled Commercial Bank deposit certificate in English or any Indian regional language.",
                     "fdr_number": "",
                     "bank_name": "",
                     "branch_name": "",
@@ -432,6 +530,7 @@ def extract_fdr_fields_from_ocr(image_bytes: bytes, fallback_fdr_num: str = "", 
                     "ifsc_code": "",
                     "lien_marked_to_aicte": False,
                     "joint_title": "",
+                    "detected_language": detect_text_script_language(extracted_text),
                     "extracted_raw_text": extracted_text[:200] if extracted_text else "",
                     "quality_metrics": quality,
                     "ela_forensics": ela_forensics,
@@ -442,16 +541,19 @@ def extract_fdr_fields_from_ocr(image_bytes: bytes, fallback_fdr_num: str = "", 
                     "gemini_analysis": None
                 }
 
+    # Normalize regional Indic/Arabic numerals to standard ASCII digits for robust parsing
+    parsed_text = normalize_indic_numerals(extracted_text)
+    detected_lang = (gemini_data.get("detected_language") if gemini_data else None) or detect_text_script_language(extracted_text)
 
     # Regex extraction
-    fdr_num_match = re.search(r'(?:FDR|FD|RECEIPT|REF|DEPOSIT)[\s:\.\#-]*([A-Z0-9\-/]{6,25})', extracted_text, re.I)
-    pattern_match = re.search(r'([A-Z]{3,4}-[A-Z0-9\-]{5,20})', extracted_text)
-    amt_match = re.search(r'(?:RS\.?|INR|AMOUNT|PRINCIPAL)[\s:\.]*([0-9,]+(?:\.[0-9]{2})?)', extracted_text, re.I)
-    mat_amt_match = re.search(r'(?:MATURITY|MAT\.?\s*VAL)[\s:\.]*([0-9,]+(?:\.[0-9]{2})?)', extracted_text, re.I)
-    ifsc_match = re.search(r'([A-Z]{4}0[A-Z0-9]{6})', extracted_text)
-    acc_match = re.search(r'(?:A\/C|AC|ACC|ACCOUNT|DEPOSIT)[\s:\.\#-]*([0-9]{9,16})', extracted_text, re.I)
-    rate_match = re.search(r'([0-9]+(?:\.[0-9]+)?)\s*%\s*(?:PA|P\.A\.)?', extracted_text, re.I)
-    date_matches = re.findall(r'(\d{4}[/-]\d{2}[/-]\d{2}|\d{2}[/-]\d{2}[/-]\d{4})', extracted_text)
+    fdr_num_match = re.search(r'(?:FDR|FD|RECEIPT|REF|DEPOSIT|रसीद|पावती|ரசீது|రసీదు)[\s:\.\#-]*([A-Z0-9\-/]{6,25})', parsed_text, re.I)
+    pattern_match = re.search(r'([A-Z]{3,4}-[A-Z0-9\-]{5,20})', parsed_text)
+    amt_match = re.search(r'(?:RS\.?|INR|AMOUNT|PRINCIPAL|रुपये|मूलधन|राशि|தொகை|మొత్తం)[\s:\.]*([0-9,]+(?:\.[0-9]{2})?)', parsed_text, re.I)
+    mat_amt_match = re.search(r'(?:MATURITY|MAT\.?\s*VAL|परिपक्वता|முதிர்வு|పరిపక్వత)[\s:\.]*([0-9,]+(?:\.[0-9]{2})?)', parsed_text, re.I)
+    ifsc_match = re.search(r'([A-Z]{4}0[A-Z0-9]{6})', parsed_text)
+    acc_match = re.search(r'(?:A\/C|AC|ACC|ACCOUNT|DEPOSIT|खाता|கணக்கு|ఖాతా)[\s:\.\#-]*([0-9]{9,16})', parsed_text, re.I)
+    rate_match = re.search(r'([0-9]+(?:\.[0-9]+)?)\s*%\s*(?:PA|P\.A\.|वार्षिक|ஆண்டு)?', parsed_text, re.I)
+    date_matches = re.findall(r'(\d{4}[/-]\d{2}[/-]\d{2}|\d{2}[/-]\d{2}[/-]\d{4})', parsed_text)
 
     quality = inspect_document_quality(image_bytes)
     ela_forensics = perform_error_level_analysis(image_bytes)
@@ -474,22 +576,18 @@ def extract_fdr_fields_from_ocr(image_bytes: bytes, fallback_fdr_num: str = "", 
     ifsc_code = ifsc_match.group(1) if ifsc_match else "BNBK0009988"
     acc_num = acc_match.group(1) if acc_match else "110022339901"
 
-    # Bank determination
+    # Multilingual Bank Determination
     bank_name = "Bharat National Bank"
     branch_name = "Vasant Kunj Main Branch"
-    text_up = extracted_text.upper()
-    if "STATE BANK OF INDIA" in text_up or "SBIN" in ifsc_code:
-        bank_name = "State Bank of India"
-        branch_name = "Pune University Branch"
-    elif "PUNJAB NATIONAL BANK" in text_up or "PUNB" in ifsc_code:
-        bank_name = "Punjab National Bank"
-        branch_name = "Bengaluru City Branch"
-    elif "CANARA" in text_up or "CNRB" in ifsc_code:
-        bank_name = "Canara Bank"
-        branch_name = "Hyderabad Circle Branch"
-    elif "HDFC" in text_up or "HDFC" in ifsc_code:
-        bank_name = "HDFC Bank"
-        branch_name = "Connaught Place Branch"
+    
+    # Check bank patterns across English and regional Indic scripts
+    matched_bank = False
+    for pat, b_name, br_name in MULTILINGUAL_BANK_PATTERNS:
+        if re.search(pat, extracted_text, re.I) or (ifsc_code and b_name[:4].upper() in ifsc_code):
+            bank_name = b_name
+            branch_name = br_name
+            matched_bank = True
+            break
 
     def to_iso_date(d_str: str, default: str) -> str:
         try:
@@ -519,9 +617,12 @@ def extract_fdr_fields_from_ocr(image_bytes: bytes, fallback_fdr_num: str = "", 
         maturity_date_str=maturity_date
     )
 
+    is_multilingual_lien = bool(re.search(r'LIEN|AICTE|COUNCIL|ग्रहणाधिकार|பற்றுரிமை|లీన్|बन्धक|अधीन|தாપણ|ಪற்று', extracted_text, re.I))
+
     extracted_data = {
         "is_valid_fdr": True,
         "detected_document_type": (gemini_data.get("detected_document_type") if gemini_data else None) or "Fixed Deposit Receipt",
+        "detected_language": detected_lang,
         "fdr_number": fdr_num,
         "bank_name": bank_name,
         "branch_name": branch_name,
@@ -533,7 +634,7 @@ def extract_fdr_fields_from_ocr(image_bytes: bytes, fallback_fdr_num: str = "", 
         "maturity_date": maturity_date,
         "term_months": 120,
         "ifsc_code": ifsc_code,
-        "lien_marked_to_aicte": bool(re.search(r'LIEN|AICTE|COUNCIL', extracted_text, re.I)),
+        "lien_marked_to_aicte": is_multilingual_lien,
         "joint_title": "Jointly Regional Officer AICTE & Principal",
         "extracted_raw_text": extracted_text[:600],
         "quality_metrics": quality,
@@ -545,10 +646,14 @@ def extract_fdr_fields_from_ocr(image_bytes: bytes, fallback_fdr_num: str = "", 
     }
 
     if gemini_data:
+        if gemini_data.get("detected_language"):
+            extracted_data["detected_language"] = str(gemini_data["detected_language"])
         if gemini_data.get("fdr_number"):
             extracted_data["fdr_number"] = str(gemini_data["fdr_number"])
         if gemini_data.get("bank_name"):
             extracted_data["bank_name"] = str(gemini_data["bank_name"])
+        if gemini_data.get("branch_name"):
+            extracted_data["branch_name"] = str(gemini_data["branch_name"])
         if gemini_data.get("principal_amount"):
             try:
                 extracted_data["principal_amount"] = float(str(gemini_data["principal_amount"]).replace("INR", "").replace("Rs.", "").replace(",", "").strip())

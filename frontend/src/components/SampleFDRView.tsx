@@ -79,7 +79,7 @@ export default function SampleFDRView() {
           </div>
 
           <div className="rounded-xl bg-blue-50 border border-blue-200 p-3 text-[11px] text-blue-900">
-            <strong>Testing Note:</strong> This document can be used during FDR registration testing to verify the complete EasyOCR text extraction and automated Three-Way Reconciliation.
+            <strong>Multilingual Intelligence Note:</strong> Fixed Deposit Receipts can be uploaded in ANY language (English, Hindi, Tamil, Telugu, Marathi, Bengali, Gujarati, Kannada, Malayalam, etc.). The OCR engine automatically normalizes Indic/regional script numerals, extracts key terms, and translates regulatory parameters into the centralized ledger.
           </div>
         </div>
       </div>

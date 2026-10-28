@@ -536,6 +536,7 @@ async def extract_fdr_document(
             "confidence_score": extracted_data.get("confidence_score", 0.98),
             "tamper_detected": extracted_data.get("ela_forensics", {}).get("tamper_detected", False),
             "clause_verified": extracted_data.get("clause_scrutiny", {}).get("clause_present", True),
+            "detected_language": extracted_data.get("detected_language", "English / Multilingual Universal"),
             "filename": original_filename,
             "document_sha256": file_hash
         }

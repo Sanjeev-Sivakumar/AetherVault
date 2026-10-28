@@ -427,6 +427,12 @@ export default function ThreeWayModal({
                     <span>Compression Variance: {ocrData.ela_forensics?.ela_mean_score || 12.4}</span>
                     <span>Laplacian Blur: {quality.blur_score || 142.5} (Sharp)</span>
                   </div>
+                  <div className="flex justify-between items-center text-[10px] pt-1 border-t border-slate-200/60">
+                    <span className="text-slate-500">Document Language:</span>
+                    <span className="font-semibold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200/50">
+                      {ocrData.detected_language || "Multilingual / Universal OCR"}
+                    </span>
+                  </div>
                   {ocrData.metadata_forensics?.editing_software_detected?.length > 0 && (
                     <div className="text-[10px] text-rose-700 font-bold bg-rose-50 p-1 rounded border border-rose-200">
                       Editing software traces: {ocrData.metadata_forensics.editing_software_detected.join(", ")}

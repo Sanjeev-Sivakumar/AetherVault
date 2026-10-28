@@ -68,17 +68,17 @@ export default function RegisterFDRModal({
       // Smooth progress animation
       const p1 = setTimeout(() => {
         setExtractProgress(45);
-        setExtractStepText("Scanning document text blocks & inspecting deposit layout...");
+        setExtractStepText("Scanning multilingual OCR text & Indic script optical blocks...");
       }, 400);
 
       const p2 = setTimeout(() => {
         setExtractProgress(75);
-        setExtractStepText("Running forensic analysis & checking deposit authenticity...");
+        setExtractStepText("Running cross-language forensics & normalizing deposit parameters...");
       }, 900);
 
       const p3 = setTimeout(() => {
         setExtractProgress(90);
-        setExtractStepText("Verifying AICTE Process Handbook Joint Lien Clauses...");
+        setExtractStepText("Verifying AICTE Process Handbook Joint Lien Clauses across regional terms...");
       }, 1400);
 
       const res = await api.extractFDRDocument(formData);
@@ -281,7 +281,7 @@ export default function RegisterFDRModal({
                       ? `Selected File: ${file.name}`
                       : previewName
                       ? `Active Document: ${previewName}`
-                      : "Drag & drop or select instrument scan for automated extraction"}
+                      : "Drag & drop or select instrument scan (English, Hindi, Tamil, Telugu, Marathi, or any language)"}
                   </span>
                 </div>
               </div>
@@ -361,17 +361,22 @@ export default function RegisterFDRModal({
               </div>
             )}
 
-            {/* Extracted Confirmation Banner */}
+            {/* Extracted Confirmation Banner with Language Tag */}
             {extractedMeta && !isExtracting && !rejectionInfo && (
-              <div className="mt-3 flex items-center justify-between rounded-xl bg-emerald-50 border border-emerald-200/60 p-2.5 text-emerald-900 animate-fadeIn">
+              <div className="mt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 rounded-xl bg-emerald-50 border border-emerald-200/60 p-2.5 text-emerald-900 animate-fadeIn">
                 <div className="flex items-center space-x-2">
                   <span className="text-[11px] font-normal">
                     Auto-Extracted from Receipt: Confidence {Math.round((extractedMeta.confidence_score || 0.98) * 100)}% • AICTE Clause: Verified
                   </span>
                 </div>
-                <span className="text-[10px] bg-emerald-200/60 text-emerald-800 px-2 py-0.5 rounded-full font-normal">
-                  Verified
-                </span>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className="text-[10px] bg-indigo-100 text-indigo-900 border border-indigo-200 px-2 py-0.5 rounded-full font-bold">
+                    Language: {extractedMeta.detected_language || "Multilingual Verified"}
+                  </span>
+                  <span className="text-[10px] bg-emerald-200/60 text-emerald-800 px-2 py-0.5 rounded-full font-bold">
+                    Verified
+                  </span>
+                </div>
               </div>
             )}
           </div>
